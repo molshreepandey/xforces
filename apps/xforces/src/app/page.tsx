@@ -10,7 +10,6 @@ export default async function Home() {
     <Navbar/>
     <div className="flex flex-col min-h-screen items-center justify-center bg-green-800 font-sans dark:bg-green-800">
       <div>Welcome to the Xforces</div>
-     <Link href={'/compiler'}>Compiler</Link> 
      <Link href={'/problem'}>Problems</Link> 
     </div>
     </>

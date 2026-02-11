@@ -10,18 +10,21 @@ async function main() {
     {
       title: "Two Sum",
       content: "Given an array of integers, return indices of the two numbers such that they add up to a specific target.",
+      code:'#include<iostream>\nusing namespace std;\nint main(){\n\\\\write your code here\n};',
       input: "[2, 7, 11, 15], target = 9",
       output: "[0, 1]",
     },
     {
       title: "Palindrome Number",
       content: "Determine whether an integer is a palindrome. An integer is a palindrome when it reads the same backward as forward.",
+      code:'#include<iostream>\nusing namespace std;\nint main(){\n\\\\write your code here\n};',
       input: "121",
       output: "true",
     },
     {
       title: "Fibonacci Sequence",
       content: "Calculate the nth Fibonacci number where F(n) = F(n-1) + F(n-2).",
+      code:'#include<iostream>\nusing namespace std;\nint main(){\n\\\\write your code here\n};',
       input: "n = 10",
       output: "55",
     }

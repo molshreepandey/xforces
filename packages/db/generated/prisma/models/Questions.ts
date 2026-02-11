@@ -38,6 +38,7 @@ export type QuestionsMinAggregateOutputType = {
   id: number | null
   title: string | null
   content: string | null
+  code: string | null
   input: string | null
   output: string | null
   createdAt: Date | null
@@ -47,6 +48,7 @@ export type QuestionsMaxAggregateOutputType = {
   id: number | null
   title: string | null
   content: string | null
+  code: string | null
   input: string | null
   output: string | null
   createdAt: Date | null
@@ -56,6 +58,7 @@ export type QuestionsCountAggregateOutputType = {
   id: number
   title: number
   content: number
+  code: number
   input: number
   output: number
   createdAt: number
@@ -75,6 +78,7 @@ export type QuestionsMinAggregateInputType = {
   id?: true
   title?: true
   content?: true
+  code?: true
   input?: true
   output?: true
   createdAt?: true
@@ -84,6 +88,7 @@ export type QuestionsMaxAggregateInputType = {
   id?: true
   title?: true
   content?: true
+  code?: true
   input?: true
   output?: true
   createdAt?: true
@@ -93,6 +98,7 @@ export type QuestionsCountAggregateInputType = {
   id?: true
   title?: true
   content?: true
+  code?: true
   input?: true
   output?: true
   createdAt?: true
@@ -189,6 +195,7 @@ export type QuestionsGroupByOutputType = {
   id: number
   title: string
   content: string
+  code: string
   input: string
   output: string
   createdAt: Date
@@ -221,6 +228,7 @@ export type QuestionsWhereInput = {
   id?: Prisma.IntFilter<"Questions"> | number
   title?: Prisma.StringFilter<"Questions"> | string
   content?: Prisma.StringFilter<"Questions"> | string
+  code?: Prisma.StringFilter<"Questions"> | string
   input?: Prisma.StringFilter<"Questions"> | string
   output?: Prisma.StringFilter<"Questions"> | string
   createdAt?: Prisma.DateTimeFilter<"Questions"> | Date | string
@@ -230,6 +238,7 @@ export type QuestionsOrderByWithRelationInput = {
   id?: Prisma.SortOrder
   title?: Prisma.SortOrder
   content?: Prisma.SortOrder
+  code?: Prisma.SortOrder
   input?: Prisma.SortOrder
   output?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
@@ -242,6 +251,7 @@ export type QuestionsWhereUniqueInput = Prisma.AtLeast<{
   NOT?: Prisma.QuestionsWhereInput | Prisma.QuestionsWhereInput[]
   title?: Prisma.StringFilter<"Questions"> | string
   content?: Prisma.StringFilter<"Questions"> | string
+  code?: Prisma.StringFilter<"Questions"> | string
   input?: Prisma.StringFilter<"Questions"> | string
   output?: Prisma.StringFilter<"Questions"> | string
   createdAt?: Prisma.DateTimeFilter<"Questions"> | Date | string
@@ -251,6 +261,7 @@ export type QuestionsOrderByWithAggregationInput = {
   id?: Prisma.SortOrder
   title?: Prisma.SortOrder
   content?: Prisma.SortOrder
+  code?: Prisma.SortOrder
   input?: Prisma.SortOrder
   output?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
@@ -268,6 +279,7 @@ export type QuestionsScalarWhereWithAggregatesInput = {
   id?: Prisma.IntWithAggregatesFilter<"Questions"> | number
   title?: Prisma.StringWithAggregatesFilter<"Questions"> | string
   content?: Prisma.StringWithAggregatesFilter<"Questions"> | string
+  code?: Prisma.StringWithAggregatesFilter<"Questions"> | string
   input?: Prisma.StringWithAggregatesFilter<"Questions"> | string
   output?: Prisma.StringWithAggregatesFilter<"Questions"> | string
   createdAt?: Prisma.DateTimeWithAggregatesFilter<"Questions"> | Date | string
@@ -276,6 +288,7 @@ export type QuestionsScalarWhereWithAggregatesInput = {
 export type QuestionsCreateInput = {
   title: string
   content: string
+  code: string
   input: string
   output: string
   createdAt?: Date | string
@@ -285,6 +298,7 @@ export type QuestionsUncheckedCreateInput = {
   id?: number
   title: string
   content: string
+  code: string
   input: string
   output: string
   createdAt?: Date | string
@@ -293,6 +307,7 @@ export type QuestionsUncheckedCreateInput = {
 export type QuestionsUpdateInput = {
   title?: Prisma.StringFieldUpdateOperationsInput | string
   content?: Prisma.StringFieldUpdateOperationsInput | string
+  code?: Prisma.StringFieldUpdateOperationsInput | string
   input?: Prisma.StringFieldUpdateOperationsInput | string
   output?: Prisma.StringFieldUpdateOperationsInput | string
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -302,6 +317,7 @@ export type QuestionsUncheckedUpdateInput = {
   id?: Prisma.IntFieldUpdateOperationsInput | number
   title?: Prisma.StringFieldUpdateOperationsInput | string
   content?: Prisma.StringFieldUpdateOperationsInput | string
+  code?: Prisma.StringFieldUpdateOperationsInput | string
   input?: Prisma.StringFieldUpdateOperationsInput | string
   output?: Prisma.StringFieldUpdateOperationsInput | string
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -311,6 +327,7 @@ export type QuestionsCreateManyInput = {
   id?: number
   title: string
   content: string
+  code: string
   input: string
   output: string
   createdAt?: Date | string
@@ -319,6 +336,7 @@ export type QuestionsCreateManyInput = {
 export type QuestionsUpdateManyMutationInput = {
   title?: Prisma.StringFieldUpdateOperationsInput | string
   content?: Prisma.StringFieldUpdateOperationsInput | string
+  code?: Prisma.StringFieldUpdateOperationsInput | string
   input?: Prisma.StringFieldUpdateOperationsInput | string
   output?: Prisma.StringFieldUpdateOperationsInput | string
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -328,6 +346,7 @@ export type QuestionsUncheckedUpdateManyInput = {
   id?: Prisma.IntFieldUpdateOperationsInput | number
   title?: Prisma.StringFieldUpdateOperationsInput | string
   content?: Prisma.StringFieldUpdateOperationsInput | string
+  code?: Prisma.StringFieldUpdateOperationsInput | string
   input?: Prisma.StringFieldUpdateOperationsInput | string
   output?: Prisma.StringFieldUpdateOperationsInput | string
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -337,6 +356,7 @@ export type QuestionsCountOrderByAggregateInput = {
   id?: Prisma.SortOrder
   title?: Prisma.SortOrder
   content?: Prisma.SortOrder
+  code?: Prisma.SortOrder
   input?: Prisma.SortOrder
   output?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
@@ -350,6 +370,7 @@ export type QuestionsMaxOrderByAggregateInput = {
   id?: Prisma.SortOrder
   title?: Prisma.SortOrder
   content?: Prisma.SortOrder
+  code?: Prisma.SortOrder
   input?: Prisma.SortOrder
   output?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
@@ -359,6 +380,7 @@ export type QuestionsMinOrderByAggregateInput = {
   id?: Prisma.SortOrder
   title?: Prisma.SortOrder
   content?: Prisma.SortOrder
+  code?: Prisma.SortOrder
   input?: Prisma.SortOrder
   output?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
@@ -382,6 +404,7 @@ export type QuestionsSelect<ExtArgs extends runtime.Types.Extensions.InternalArg
   id?: boolean
   title?: boolean
   content?: boolean
+  code?: boolean
   input?: boolean
   output?: boolean
   createdAt?: boolean
@@ -391,6 +414,7 @@ export type QuestionsSelectCreateManyAndReturn<ExtArgs extends runtime.Types.Ext
   id?: boolean
   title?: boolean
   content?: boolean
+  code?: boolean
   input?: boolean
   output?: boolean
   createdAt?: boolean
@@ -400,6 +424,7 @@ export type QuestionsSelectUpdateManyAndReturn<ExtArgs extends runtime.Types.Ext
   id?: boolean
   title?: boolean
   content?: boolean
+  code?: boolean
   input?: boolean
   output?: boolean
   createdAt?: boolean
@@ -409,12 +434,13 @@ export type QuestionsSelectScalar = {
   id?: boolean
   title?: boolean
   content?: boolean
+  code?: boolean
   input?: boolean
   output?: boolean
   createdAt?: boolean
 }
 
-export type QuestionsOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "title" | "content" | "input" | "output" | "createdAt", ExtArgs["result"]["questions"]>
+export type QuestionsOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "title" | "content" | "code" | "input" | "output" | "createdAt", ExtArgs["result"]["questions"]>
 
 export type $QuestionsPayload<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   name: "Questions"
@@ -423,6 +449,7 @@ export type $QuestionsPayload<ExtArgs extends runtime.Types.Extensions.InternalA
     id: number
     title: string
     content: string
+    code: string
     input: string
     output: string
     createdAt: Date
@@ -852,6 +879,7 @@ export interface QuestionsFieldRefs {
   readonly id: Prisma.FieldRef<"Questions", 'Int'>
   readonly title: Prisma.FieldRef<"Questions", 'String'>
   readonly content: Prisma.FieldRef<"Questions", 'String'>
+  readonly code: Prisma.FieldRef<"Questions", 'String'>
   readonly input: Prisma.FieldRef<"Questions", 'String'>
   readonly output: Prisma.FieldRef<"Questions", 'String'>
   readonly createdAt: Prisma.FieldRef<"Questions", 'DateTime'>
