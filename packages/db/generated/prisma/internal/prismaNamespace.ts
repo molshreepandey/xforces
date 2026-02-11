@@ -849,6 +849,7 @@ export const QuestionsScalarFieldEnum = {
   id: 'id',
   title: 'title',
   content: 'content',
+  code: 'code',
   input: 'input',
   output: 'output',
   createdAt: 'createdAt'

@@ -1,5 +1,6 @@
 import Navbar from "@/component/navbar";
 import { prisma } from "@repo/db"
+import Link from "next/link";
 
 export default async function Problems(){
   const problems = await prisma.questions.findMany(
@@ -21,6 +22,7 @@ export default async function Problems(){
           <div key={idx} className="flex gap-6">
             <h1>{problem.id}</h1>
             <h1>{problem.title}</h1>
+            <Link href={`/problem/${problem.id}`}>Solve</Link>
           </div>
         ))}
         </div>

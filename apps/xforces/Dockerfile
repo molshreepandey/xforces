@@ -18,18 +18,20 @@ RUN bun install
 FROM base AS build
 WORKDIR /app
 COPY --from=installer /app/ ./
-ENV AUTH_SECRET=
-ENV DATABASE_URL=
-ENV AUTH_GOOGLE_ID=
-ENV AUTH_GOOGLE_SECRET=
-ENV AUTH_TRUST_HOST=
-ENV AUTH_URL=
-ENV REDIS_URL=
+ARG DATABASE_URL
+ENV DATABASE_URL=${DATABASE_URL}
 RUN bun run build --filter=xforces
 
 
 FROM base AS final
 WORKDIR /app
+ARG DATABASE_URL
+ENV DATABASE_URL=${DATABASE_URL}
+ENV AUTH_GOOGLE_ID=""
+ENV AUTH_GOOGLE_SECRET=""
+ENV AUTH_TRUST_HOST=""
+ENV AUTH_URL=""
+ENV REDIS_URL=""
 COPY --from=build /app/node_modules ./node_modules
 COPY --from=build /app/apps/xforces/node_modules ./apps/xforces/node_modules
 COPY --from=build /app/apps/xforces/.next ./apps/xforces/.next
@@ -39,18 +41,3 @@ COPY --from=build /app/apps/xforces/next.config.ts ./apps/xforces/next.config.ts
 WORKDIR /app/apps/xforces
 EXPOSE 3002
 CMD ["bun", "start"]
-
-
-
-
-
-
-
-
-
-# RUN bun install
-# RUN bun turbo run build --filter=xforces
-
-# WORKDIR  /app/apps/xforces/
-# EXPOSE 3002
-# CMD [ "bun","run", "start" ]

@@ -45,6 +45,8 @@ const AuthConfig: NextAuthConfig = {
         },
       },
       profile(profile) {
+        console.log("profile");
+        console.log(profile);
         return {
           id: profile.sub,
           name: profile.name,
@@ -123,7 +125,10 @@ const AuthConfig: NextAuthConfig = {
       return true;
     },
     async jwt({ token, user, trigger }) {
-      if (user && trigger == "signIn") {
+      if (user && (trigger == "signIn" || trigger == "signUp")) {
+        console.log("jwy");
+        console.log(user);
+        console.log(trigger);
         const newVerison = uuid();
         await prisma.user.update({
           where: {
@@ -133,8 +138,12 @@ const AuthConfig: NextAuthConfig = {
             tokenVersion: newVerison,
           },
         });
+        
         token.id = user?.id;
         token.tokenVersion = newVerison;
+        console.log("token in first signin");
+        console.log(token);
+        return token;
       }
       if (!token.id) {
         return null;
