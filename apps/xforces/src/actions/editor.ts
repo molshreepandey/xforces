@@ -3,6 +3,7 @@ import redis from "@/lib/redis";
 import {SubmissionPayload} from "@repo/types";
 
 export const SubmitCode = async(submission:SubmissionPayload)=>{
+  console.log("redis submistion started");
   const taskId = await redis.xadd(
     "tasks", "*", 
     "userId", JSON.stringify(submission.userid), 

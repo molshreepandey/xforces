@@ -3,6 +3,7 @@ import { redirect } from "next/navigation";
 import Editorpage from "@/component/editor";
 import QuestionBoard from "@/component/questionBoard";
 import { EditorLang } from "@/types/editor";
+import { auth } from "@/lib/auth";
 
 export default async function ProblemPage({
   params,
@@ -29,6 +30,10 @@ export default async function ProblemPage({
   if (!problem) {
     return redirect("/error?message=wrongproblemid");
   }
+
+  const user = await auth();
+  console.log("auth");
+  console.log(user);
   return (
     <div className="bg-green-900 min-h-screen flex flex-col">
       <div className="shrink-0">
@@ -42,7 +47,17 @@ export default async function ProblemPage({
           <div>{problem?.output}</div>
         </div>
         <div className="w-2/3 min-h-0">
-        <Editorpage content={problem?.code || ""} language={EditorLang.cpp} />
+          <Editorpage
+            codeEditorParam={{
+              content: {
+                code: problem.code,
+                input: problem.input,
+                output: problem.output,
+              },
+              language: EditorLang.cpp,
+            }}
+            userid={user?.user?.id as string}
+          />
         </div>
       </div>
     </div>

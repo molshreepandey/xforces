@@ -166,6 +166,11 @@ const AuthConfig: NextAuthConfig = {
       if (!token.tokenVersion || !token.id) {
         return null as any;
       }
+      // console.log("session");
+      // console.log(session);
+      // console.log("token");
+      // console.log(token);
+      session.user.id = token.id as string;
       return session;
     },
     async redirect({ url, baseUrl }) {
