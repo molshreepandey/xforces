@@ -1,7 +1,6 @@
 "use client"
 import { SubmitCode } from '@/actions/editor';
 import { CodeEditorSchema } from '@/lib/editor/editor';
-import { EditorLang } from '@/types/editor';
 import dynamic from 'next/dynamic'
 import { useRef } from 'react';
 
