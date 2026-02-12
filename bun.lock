@@ -16,6 +16,7 @@
     "apps/engine": {
       "name": "engine",
       "dependencies": {
+        "dockernode": "^0.1.0",
         "ioredis": "^5.9.2",
       },
       "devDependencies": {
@@ -627,6 +628,8 @@
     "detect-libc": ["detect-libc@2.1.2", "", {}, "sha512-Btj2BOOO83o3WyH59e8MgXsxEQVcarkUOpEYrubB0urwnN10yQ364rsiByU11nZlqWYZm05i/of7io4mzihBtQ=="],
 
     "devlop": ["devlop@1.1.0", "", { "dependencies": { "dequal": "^2.0.0" } }, "sha512-RWmIqhcFf1lRYBvNmr7qTNuyCt/7/ns2jbpp1+PalgE/rDQcBT0fioSMUpJ93irlUhC5hrg4cYqe6U+0ImW0rA=="],
+
+    "dockernode": ["dockernode@0.1.0", "", { "bin": { "docker-repl": "./bin/index.js" } }, "sha512-hWe8CxOB5PXB+uMarax5o43apN0Kzat3uSSHoE68aaVRuQwsul8aB/FEI2wxuODJxk3B+mF/vqbPQlAxnrKleQ=="],
 
     "doctrine": ["doctrine@2.1.0", "", { "dependencies": { "esutils": "^2.0.2" } }, "sha512-35mSku4ZXK0vfCuHEDAwt55dg2jNajHZ1odvF+8SSr82EsZY4QmXfuWso8oEd8zRhVObSN18aM0CjSdoBX7zIw=="],
 
