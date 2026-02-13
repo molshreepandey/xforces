@@ -24,7 +24,3 @@ export default async function getOrPullImage(imageName: string) {
     }
   }
 }
-
-// usage inside your main flow
-// await getOrPullImage('siddharth_lpu/xforces-runner:latest');
-// Now it is safe to createContainer
