@@ -1,6 +1,7 @@
 import convertToJson from "@/actions/tojson";
 import { SubmissionPayload } from "@repo/types";
 import redis from "./redis";
+import test from "./tester";
 export default async function startWorker({
   GROUP_NAME,
   CONSUMER_NAME,
@@ -40,7 +41,8 @@ export default async function startWorker({
       console.log(taskcode);
       const jsonObject: SubmissionPayload = convertToJson(taskcode);
       console.log(jsonObject);
-      await new Promise((resolve) => setTimeout(resolve, 5000));
+      await test(jsonObject);
+      // await new Promise((resolve) => setTimeout(resolve, 5000));
       await redis.xack(STREAM_KEY, GROUP_NAME, taskid);
       await redis.xdel(STREAM_KEY, taskid);
     } catch (err) {
