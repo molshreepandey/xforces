@@ -35,7 +35,6 @@ async function runSubmission() {
     }
   });
 
-  // 3. Attach to streams
   const stream = await container.attach({
     stream: true,
     stdin: true,
@@ -45,23 +44,14 @@ async function runSubmission() {
 
   await container.start();
 
-  // 5. Send the Input (The critical part!)
-  // This sits in the buffer until "./app" runs and requests "cin >>"
   stream.write(inputTestCase);
-  stream.end(); // Important: Tells the container "That's all the input"
-
-  // 6. Capture Output (You need to demultiplex this!)
-  // Note: Use the demux function I showed you earlier to separate stdout/stderr
-  // For simplicity here, we just wait to see it finish.
+  stream.end(); 
   const result = await container.wait();
-
+  console.log(result);
   console.log("Execution finished with code:", result.StatusCode);
   
   await container.remove();
 }
 
 
-
-
-//echo "BASE64_CODE" | base64 -d > main.cpp && g++ -o app main.cpp && ./app
 runSubmission();

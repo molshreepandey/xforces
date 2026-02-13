@@ -4,7 +4,7 @@
   "type": "module",
   "private": true,
   "scripts": {
-    "dev": "bun --watch ./src/index.ts",
+    "dev": "node --env-file=.env ./dist/index.js",
     "build": "bun build ./src/index.ts --outdir dist --target node --external cpu-features --external ssh2",
     "start": "node ./dist/index.js"
   },
@@ -19,6 +19,7 @@
   },
   "dependencies": {
     "dockerode": "^4.0.9",
-    "ioredis": "^5.9.2"
+    "ioredis": "^5.9.2",
+    "ssh2": "^1.17.0"
   }
 }

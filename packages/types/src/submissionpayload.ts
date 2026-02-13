@@ -1,8 +1,8 @@
 export type SubmissionPayload= {
-  userid: String,
-  code: String,
-  input: String,
-  output: String,
-  timelimit: String,
-  memory: String
+  userid: string,
+  code: string,
+  input: string,
+  output: string,
+  timelimit: string,
+  memory: string
 }
