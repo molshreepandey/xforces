@@ -27,7 +27,7 @@ export default async function test(payload: SubmissionPayload) {
       StdinOnce: true,
       AttachStdin: true,
       HostConfig: {
-        Memory: 128 * 1024 * 1024,
+        Memory: Number(payload.memory)*1024*1024,
         NetworkMode: "none",
       },
     });

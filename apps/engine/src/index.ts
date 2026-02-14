@@ -6,7 +6,7 @@ const GROUP_NAME = 'worker_group';
 const CONSUMER_NAME = process.env.CONSUMER_NAME || 'worker_1'
 const STREAM_KEY =  process.env.STREAM_KEY || 'tasks';
 export const CONTAINER_NAME = process.env.CONTAINER_NAME || "viratubuntu/xforces-runner:latest"
-
+export const MAX_OUTPUT_SIZE = process.env.MAX_OUTPUT_SIZE || 100*1024
 
 
 
