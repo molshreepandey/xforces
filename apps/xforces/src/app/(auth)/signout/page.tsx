@@ -1,5 +1,5 @@
-export default function signout(){
-  
+export default function signout() {
+
   return (
     <>
       <div>Signout Page</div>

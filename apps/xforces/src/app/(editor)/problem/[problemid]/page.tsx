@@ -4,6 +4,7 @@ import Editorpage from "@/component/editor";
 import QuestionBoard from "@/component/questionBoard";
 import { EditorLang } from "@/types/editor";
 import { auth } from "@/lib/auth";
+import Link from "next/link";
 
 export default async function ProblemPage({
   params,
@@ -12,7 +13,7 @@ export default async function ProblemPage({
 }) {
   const param = await params;
   const { problemid } = param;
-  console.log(problemid);
+
   const problem = await prisma.questions.findUnique({
     where: {
       id: Number(problemid),
@@ -26,27 +27,40 @@ export default async function ProblemPage({
       output: true,
     },
   });
-  console.log(problem);
+
   if (!problem) {
     return redirect("/error?message=wrongproblemid");
   }
 
   const user = await auth();
-  console.log("auth");
-  console.log(user);
+
   return (
-    <div className="bg-green-900 min-h-screen flex flex-col">
-      <div className="shrink-0">
-        <h1>XFroces</h1>
-      </div>
-      <div className="flex flex-1 min-h-0">
-        <div className="w-1/3">
-          <h1>{problem?.title}</h1>
-          <QuestionBoard question={problem?.content || ""} />
-          <div>{problem?.input}</div>
-          <div>{problem?.output}</div>
+    <div className="h-screen flex flex-col">
+      {/* Top bar */}
+      <div className="flex items-center justify-between px-4 py-2 bg-surface border-b border-border shrink-0">
+        <div className="flex items-center gap-4">
+          <Link href="/" className="text-accent font-bold text-lg">
+            XForces
+          </Link>
+          <span className="text-border">|</span>
+          <Link href="/problem" className="text-text-muted hover:text-text text-sm transition-colors">
+            Problems
+          </Link>
         </div>
-        <div className="w-2/3 min-h-0">
+        <h1 className="text-sm font-medium text-text">
+          {problem.id}. {problem.title}
+        </h1>
+      </div>
+
+      {/* Split panel */}
+      <div className="flex flex-1 min-h-0">
+        {/* Left: Problem content only */}
+        <div className="w-2/5 border-r border-border overflow-y-auto p-6">
+          <QuestionBoard question={problem.content || ""} />
+        </div>
+
+        {/* Right: Code editor */}
+        <div className="w-3/5 min-h-0 flex flex-col">
           <Editorpage
             codeEditorParam={{
               content: {

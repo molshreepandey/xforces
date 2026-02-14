@@ -65,7 +65,7 @@ export default async function test(payload: SubmissionPayload) {
 
     const timeLimit = () =>
       new Promise((_, reject) =>
-        setTimeout(() => reject(new Error("TLE")), Number(payload.timelimit)),
+        setTimeout(() => reject(new Error("TLE")), Number(payload.timelimit)+800),
       );
 
     await container.start();
