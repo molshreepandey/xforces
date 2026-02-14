@@ -1,6 +1,10 @@
 import { SubmissionPayload } from "@repo/types";
 import { docker } from "./docker";
 import { CONTAINER_NAME } from "..";
+import {Writable} from "stream";
+
+
+
 
 export default async function test(payload:SubmissionPayload){
   const codeBase64 = Buffer.from(payload.code).toString('base64');
@@ -18,6 +22,7 @@ export default async function test(payload:SubmissionPayload){
       Tty: false,         
       OpenStdin: true,   
       StdinOnce: true,    
+      AttachStdin: true,
       HostConfig: {
         Memory: 128 * 1024 * 1024, 
         NetworkMode: 'none',
@@ -25,29 +30,42 @@ export default async function test(payload:SubmissionPayload){
     });
     console.log("stream created");
     const stream = await container.attach({
+      hijack:true,
       stream: true,
       stdin: true,
       stdout: true,
       stderr: true
     });
     console.log("container commadn to start");
+    let output="";
+    let errorOutput="";
+    const stdoutStream = new Writable({
+        write(chunk, encoding, callback) {
+          output += chunk.toString();
+          callback();
+        }
+      });
+    
+      const stderrStream = new Writable({
+        write(chunk, encoding, callback) {
+          errorOutput += chunk.toString();
+          callback();
+        }
+      });
+    container.modem.demuxStream(stream, stdoutStream, stderrStream);
+    
     await container.start();
     console.log("container  start");
-    container.modem.demuxStream(stream, process.stdout, process.stderr);
-    
-      // 3. Write Input and Close (Fixes the 'String' error)
-      // Ensure we pass a primitive string
       if (payload.input) {
         stream.write(String(payload.input)); 
       }
-      
-      // Use a small delay or wait for container state if needed, 
-      // but usually ending the stream is enough to signal EOF to the app
       stream.end();
-    
       const result = await container.wait();
       console.log(result);
       console.log("Execution finished with code:", result.StatusCode);
-    
+      console.log("output");
+      console.log(output);
+      console.log("error");
+      console.log(errorOutput);
       await container.remove();
 }
