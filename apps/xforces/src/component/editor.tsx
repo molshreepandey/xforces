@@ -53,7 +53,7 @@ export default function editorpage({
             setResult(null);
             try {
               const id = await SubmitCode({
-                code: editorRef.current.getValue() as String,
+                code: editorRef.current.getValue() as string,
                 userid: userid,
                 memory: "512",
                 timelimit: "1000",
