@@ -1,5 +1,10 @@
 FROM oven/bun:latest AS base
 WORKDIR /app
+RUN apt-get update && apt-get install -y \
+    python3 \
+    make \
+    g++ \
+    && rm -rf /var/lib/apt/lists/*
 RUN bun add -g turbo
 
 
@@ -10,15 +15,15 @@ RUN  turbo prune engine --docker
 
 FROM base AS installer
 WORKDIR /app
-COPY --from=manager /app/out/bun.lock* ./
-COPY --from=manager /app/out/full/ ./
-COPY --from=manager /app/out/json/ ./
-# COPY --from=manager /app/turbo.json ./
-RUN bun install
+COPY --from=manager /app/out/bun.lock* .
+COPY --from=manager /app/out/full/ .
+COPY --from=manager /app/out/json/ .
+COPY --from=manager /app/turbo.json .
+RUN bun install --verbose
 
 FROM base AS builder
 WORKDIR /app
-COPY --from=installer /app/ ./
+COPY --from=installer /app/ .
 RUN bun run build
 
 FROM node:20.10.0-alpine AS final
@@ -27,4 +32,4 @@ COPY --from=builder /app/apps/engine/dist ./apps/engine/dist
 COPY --from=builder /app/apps/engine/node_modules ./apps/engine/node_modules
 COPY --from=builder /app/node_modules ./node_modules
 COPY --from=builder /app/apps/engine/package.json ./apps/engine/package.json
-CMD ["npm","run","start"]
+CMD ["node","app/apps/engine/dist/index.js"]
