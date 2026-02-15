@@ -11,8 +11,8 @@ FROM base AS installer
 WORKDIR /app
 COPY --from=manager /app/out/full/ ./
 COPY --from=manager /app/out/bun.lock* ./
-COPY --from=manager /app/turbo.json ./
-COPY --from=manager /app/package.json ./
+# COPY --from=manager /app/turbo.json ./
+# COPY --from=manager /app/package.json ./
 RUN bun install
 
 FROM base AS build
