@@ -31,5 +31,5 @@ COPY --from=build /app/apps/xforces/public ./apps/xforces/public
 COPY --from=build /app/apps/xforces/package.json ./apps/xforces/package.json
 COPY --from=build /app/apps/xforces/next.config.ts ./apps/xforces/next.config.ts
 WORKDIR /app/apps/xforces
-EXPOSE 3002
+EXPOSE 3000
 CMD ["bun", "start"]
