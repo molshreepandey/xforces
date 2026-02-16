@@ -1,8 +1,10 @@
-FROM oven/bun:latest AS base
+FROM oven/bun:alpine AS base
+
+FROM base AS optimizer
 WORKDIR /app
 RUN bun add -g  turbo
 
-FROM base AS manager
+FROM optimizer AS manager
 WORKDIR /app
 COPY . .
 RUN turbo prune xforces --docker
@@ -11,8 +13,6 @@ FROM base AS installer
 WORKDIR /app
 COPY --from=manager /app/out/full/ .
 COPY --from=manager /app/out/bun.lock* .
-# COPY --from=manager /app/turbo.json .
-# COPY --from=manager /app/package.json .
 RUN bun install
 
 FROM base AS build
@@ -22,7 +22,7 @@ ARG DATABASE_URL
 RUN DATABASE_URL=$DATABASE_URL bun run build --filter=xforces
 
 
-FROM base AS final
+FROM oven/bun:alpine AS final
 WORKDIR /app
 COPY --from=build /app/node_modules ./node_modules
 COPY --from=build /app/apps/xforces/node_modules ./apps/xforces/node_modules

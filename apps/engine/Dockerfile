@@ -1,15 +1,19 @@
 FROM oven/bun:alpine AS base
-RUN apk add --no-cache python3 make g++
-WORKDIR /app
+
+FROM base AS optimizer
 RUN bun add -g turbo
 
 
-FROM base AS manager
+FROM base AS stdbase
+RUN apk add --no-cache python3 make g++
+
+
+FROM optimizer AS manager
 WORKDIR /app
 COPY . .
 RUN  turbo prune engine --docker
 
-FROM base AS installer
+FROM stdbase AS installer
 WORKDIR /app
 COPY --from=manager /app/out/bun.lock* .
 COPY --from=manager /app/out/full/ .
