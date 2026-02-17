@@ -1,4 +1,3 @@
-
 # xForces 
 
 ![Status](https://img.shields.io/badge/status-active-success.svg)
@@ -6,114 +5,125 @@
 
 **xForces** is a high-performance **Competitive Programming Platform** designed to host coding contests, practice algorithmic problems, and provide real-time code execution.
 
-Built with a modern tech stack, it features a **Next.js** frontend for a seamless user experience and a **Rust-based worker** for secure, high-speed code compilation and execution within isolated Docker containers.
+Built with a modern tech stack, it features a **Next.js** frontend for a seamless user experience and a **Rust-based worker** (or high-speed TypeScript engine) for secure, isolated code compilation and execution.
 
 ---
 
-## 🏗️ Architecture
+##  Architecture
 
 The platform follows a microservices-inspired architecture to separate the web interface from the heavy lifting of code execution.
 
-1.  **Frontend & API (Next.js)**: Handles user authentication, problem management, contest logic, and serves the UI.
-2.  **Message Queue (Redis)**: Acts as a buffer between the web server and the execution engine, ensuring reliability under high load.
-3.  **Execution Engine (TypeScript)**: A dedicated worker service that pulls jobs from Redis, compiles code, and executes it safely.
+1.  **Frontend & API (Next.js)**: Handles user authentication, problem management, and contest logic.
+2.  **Message Queue (Redis)**: Acts as a buffer between the web server and the execution engine.
+3.  **Execution Engine**: A dedicated worker service that pulls jobs from Redis and manages the execution lifecycle.
 4.  **Sandbox (Docker & cgroups)**: Ensures that user code runs in a restricted environment with strict memory and CPU limits.
 
 ---
 
-## Key Features
+##  Key Features
 
 -   **Real-time Code Execution**: Instant feedback on submissions with detailed verdicts (AC, WA, TLE, MLE).
--   **Secure Sandboxing**: Uses Docker containers and Linux `cgroups` to isolate and limit resources for untrusted code.
-<!---   **Contest System**: Support for timed competitive programming contests with live leaderboards.-->
-<!---   **Multi-Language Support**: Architecture supports C++, Java, Python, and Rust (extensible to more).-->
-<!---   **Problem Archive**: A searchable library of algorithmic problems with varying difficulty levels.-->
--   **User Dashboard**: Track submissions, ratings, and solve history.
+-   **Secure Sandboxing**: Uses Docker containers and Linux `cgroups` to isolate untrusted code.
+-   **User Dashboard**: Track submissions, ratings, and problem-solving history.
 
 ---
 
-## Tech Stack
+##  Tech Stack
 
 ### Core
--   **Frontend**: [Next.js](https://nextjs.org/) (React Framework), TypeScript
+-   **Frontend**: [Next.js](https://nextjs.org/) (React), TypeScript
 -   **Styling**: Tailwind CSS
--   **Backend Logic**: Next.js Server Actions / API Routes
+-   **Backend**: Next.js Server Actions / API Routes
+-   **Database**: PostgreSQL (Prisma ORM)
 
 ### Execution & Infrastructure
--   **Worker Service**: [Bun](https://bun.sh/) (for maximum performance and safety)
--   **Containerization**: Docker
+-   **Worker Service**: Rust / [Bun](https://bun.sh/) (Optimized for low-latency execution)
+-   **Containerization**: Docker & Docker Compose
 -   **Queue & Caching**: Redis
--   **Database**: PostgreSQL (Prisma ORM)
 
 ---
 
-## Getting Started
+##  Getting Started
 
-Follow these instructions to set up the project locally for development.
+You can set up **xForces** using two different methods depending on your environment.
 
 ### Prerequisites
-Ensure you have the following installed:
--   **Node.js** (v18+)
--   **Bun** (latest stable)
--   **Docker** (Desktop or Engine)
--   **PostgreSQL** & **Redis** (or use Docker Compose)
+-   **Docker & Docker Compose** (Required)
+-   **Bun & Node.js** (Optional - only for Method 2)
 
-### 1. Clone the Repository
-```bash
-git clone [https://github.com/pankajyadav-dev/xforces.git](https://github.com/pankajyadav-dev/xforces.git)
-cd xforces
+---
 
-```
+> **Note:** Ensure Docker is running before starting the application, as the execution worker requires Docker to spawn secure containers for code evaluation.
 
-### 2. Environment Setup
+### Method 1: Full Docker Setup (Recommended)
+This is the fastest way to get the entire platform running without installing local dependencies like Postgres or Redis.
 
-Create a `.env` file in the root directory (or inside `apps/xforces` and `apps/engine`) and add your credentials:
+1.  **Clone the Repository**
+    ```bash
+    git clone [https://github.com/pankajyadav-dev/xforces.git](https://github.com/pankajyadav-dev/xforces.git)
+    cd xforces
+    ```
+
+2.  **Environment Setup**
+    Create a `.env` file in the root directory and add your credentials (see **Environment Variables** section below).
+
+3.  **Launch the Platform**
+    ```bash
+    docker-compose up --build
+    ```
+    *This command builds and starts the Frontend, Worker, Redis, and Postgres services automatically.*
+
+---
+
+### Method 2: Hybrid Development (Local + Docker)
+Use this if you are actively developing and need Hot Module Replacement (HMR).
+
+1.  **Start Infrastructure Only**
+    ```bash
+    docker-compose up -d redis postgres
+    ```
+
+2.  **Install Dependencies**
+    ```bash
+    bun install
+    ```
+
+3.  **Sync Database**
+    ```bash
+    bun turbo db:migrate
+    ```
+
+4.  **Run Development Servers**
+    ```bash
+    bun run dev
+    ```
+    The web app will be available at `http://localhost:3000`.
+
+---
+
+##  Environment Variables
+
+Create a `.env` file in the `apps/xforces` & `apps/engine` & `packages/dp`  directory:
 
 ```env
-DATABASE_URL="postgresql://user:password@localhost:5432/xforces"
+DATABASE_URL="postgres://user:password@localhost:5432/xforces"
 REDIS_URL="redis://localhost:6379"
 AUTH_SECRET="your-secret-key"
 AUTH_URL="http://localhost:3000"
 AUTH_GOOGLE_ID="your-google-auth-id"
 AUTH_GOOGLE_SECRET="your-google-auth-secret"
 AUTH_TRUST_HOST=true
-REDIS_URL=redis://localhost:6379
-```
-
-### 3. Start Infrastructure (Database & Redis)
-
-If you don't have Postgres/Redis running locally, you can use Docker Compose:
-
-```bash
-docker-compose up -d redis postgres
 
 ```
-
-### 4. Install Dependencies & Run App (Development mode)
-
-```bash
-# Install Node dependencies
-bun install
-# Initialize Database
-bun turbo db:migrate
-
-# Start the Next.js development server
-bun run dev
-
-```
-
-The web app should now be running at `http://localhost:3000`.
-
-
-> **Note:** Ensure Docker is running, as the Typescript worker needs to spawn containers.
 
 ---
-
 
 ## 👤 Author
 
 **Pankaj Yadav**
 
-* GitHub: [@pankajyadav-dev]()
-* LinkedIn: [Pankaj Yadav]()
+* **GitHub**: [@pankajyadav-dev]()
+* **LinkedIn**: [Pankaj Yadav]()
+
+---
 
