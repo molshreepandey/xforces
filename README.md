@@ -1,135 +1,119 @@
-# Turborepo starter
 
-This Turborepo starter is maintained by the Turborepo core team.
+# xForces 
 
-## Using this example
+![Status](https://img.shields.io/badge/status-active-success.svg)
+![Tech](https://img.shields.io/badge/tech-Next.js%20%7C%20TypeScript%20%7C%20Docker%20%7C%20Redis-blueviolet)
 
-Run the following command:
+**xForces** is a high-performance **Competitive Programming Platform** designed to host coding contests, practice algorithmic problems, and provide real-time code execution.
 
-```sh
-npx create-turbo@latest
-```
+Built with a modern tech stack, it features a **Next.js** frontend for a seamless user experience and a **Rust-based worker** for secure, high-speed code compilation and execution within isolated Docker containers.
 
-## What's inside?
+---
 
-This Turborepo includes the following packages/apps:
+## 🏗️ Architecture
 
-### Apps and Packages
+The platform follows a microservices-inspired architecture to separate the web interface from the heavy lifting of code execution.
 
-- `docs`: a [Next.js](https://nextjs.org/) app
-- `web`: another [Next.js](https://nextjs.org/) app
-- `@repo/ui`: a stub React component library shared by both `web` and `docs` applications
-- `@repo/eslint-config`: `eslint` configurations (includes `eslint-config-next` and `eslint-config-prettier`)
-- `@repo/typescript-config`: `tsconfig.json`s used throughout the monorepo
+1.  **Frontend & API (Next.js)**: Handles user authentication, problem management, contest logic, and serves the UI.
+2.  **Message Queue (Redis)**: Acts as a buffer between the web server and the execution engine, ensuring reliability under high load.
+3.  **Execution Engine (TypeScript)**: A dedicated worker service that pulls jobs from Redis, compiles code, and executes it safely.
+4.  **Sandbox (Docker & cgroups)**: Ensures that user code runs in a restricted environment with strict memory and CPU limits.
 
-Each package/app is 100% [TypeScript](https://www.typescriptlang.org/).
+---
 
-### Utilities
+## Key Features
 
-This Turborepo has some additional tools already setup for you:
+-   **Real-time Code Execution**: Instant feedback on submissions with detailed verdicts (AC, WA, TLE, MLE).
+-   **Secure Sandboxing**: Uses Docker containers and Linux `cgroups` to isolate and limit resources for untrusted code.
+<!---   **Contest System**: Support for timed competitive programming contests with live leaderboards.-->
+<!---   **Multi-Language Support**: Architecture supports C++, Java, Python, and Rust (extensible to more).-->
+<!---   **Problem Archive**: A searchable library of algorithmic problems with varying difficulty levels.-->
+-   **User Dashboard**: Track submissions, ratings, and solve history.
 
-- [TypeScript](https://www.typescriptlang.org/) for static type checking
-- [ESLint](https://eslint.org/) for code linting
-- [Prettier](https://prettier.io) for code formatting
+---
 
-### Build
+## Tech Stack
 
-To build all apps and packages, run the following command:
+### Core
+-   **Frontend**: [Next.js](https://nextjs.org/) (React Framework), TypeScript
+-   **Styling**: Tailwind CSS
+-   **Backend Logic**: Next.js Server Actions / API Routes
 
-```
-cd my-turborepo
+### Execution & Infrastructure
+-   **Worker Service**: [Bun](https://bun.sh/) (for maximum performance and safety)
+-   **Containerization**: Docker
+-   **Queue & Caching**: Redis
+-   **Database**: PostgreSQL (Prisma ORM)
 
-# With [global `turbo`](https://turborepo.dev/docs/getting-started/installation#global-installation) installed (recommended)
-turbo build
+---
 
-# Without [global `turbo`](https://turborepo.dev/docs/getting-started/installation#global-installation), use your package manager
-npx turbo build
-yarn dlx turbo build
-pnpm exec turbo build
-```
+## Getting Started
 
-You can build a specific package by using a [filter](https://turborepo.dev/docs/crafting-your-repository/running-tasks#using-filters):
+Follow these instructions to set up the project locally for development.
 
-```
-# With [global `turbo`](https://turborepo.dev/docs/getting-started/installation#global-installation) installed (recommended)
-turbo build --filter=docs
+### Prerequisites
+Ensure you have the following installed:
+-   **Node.js** (v18+)
+-   **Bun** (latest stable)
+-   **Docker** (Desktop or Engine)
+-   **PostgreSQL** & **Redis** (or use Docker Compose)
 
-# Without [global `turbo`](https://turborepo.dev/docs/getting-started/installation#global-installation), use your package manager
-npx turbo build --filter=docs
-yarn exec turbo build --filter=docs
-pnpm exec turbo build --filter=docs
-```
-
-### Develop
-
-To develop all apps and packages, run the following command:
-
-```
-cd my-turborepo
-
-# With [global `turbo`](https://turborepo.dev/docs/getting-started/installation#global-installation) installed (recommended)
-turbo dev
-
-# Without [global `turbo`](https://turborepo.dev/docs/getting-started/installation#global-installation), use your package manager
-npx turbo dev
-yarn exec turbo dev
-pnpm exec turbo dev
-```
-
-You can develop a specific package by using a [filter](https://turborepo.dev/docs/crafting-your-repository/running-tasks#using-filters):
+### 1. Clone the Repository
+```bash
+git clone [https://github.com/pankajyadav-dev/xforces.git](https://github.com/pankajyadav-dev/xforces.git)
+cd xforces
 
 ```
-# With [global `turbo`](https://turborepo.dev/docs/getting-started/installation#global-installation) installed (recommended)
-turbo dev --filter=web
 
-# Without [global `turbo`](https://turborepo.dev/docs/getting-started/installation#global-installation), use your package manager
-npx turbo dev --filter=web
-yarn exec turbo dev --filter=web
-pnpm exec turbo dev --filter=web
+### 2. Environment Setup
+
+Create a `.env` file in the root directory (or inside `apps/xforces` and `apps/engine`) and add your credentials:
+
+```env
+DATABASE_URL="postgresql://user:password@localhost:5432/xforces"
+REDIS_URL="redis://localhost:6379"
+AUTH_SECRET="your-secret-key"
+AUTH_URL="http://localhost:3000"
+AUTH_GOOGLE_ID="your-google-auth-id"
+AUTH_GOOGLE_SECRET="your-google-auth-secret"
+AUTH_TRUST_HOST=true
+REDIS_URL=redis://localhost:6379
 ```
 
-### Remote Caching
+### 3. Start Infrastructure (Database & Redis)
 
-> [!TIP]
-> Vercel Remote Cache is free for all plans. Get started today at [vercel.com](https://vercel.com/signup?/signup?utm_source=remote-cache-sdk&utm_campaign=free_remote_cache).
+If you don't have Postgres/Redis running locally, you can use Docker Compose:
 
-Turborepo can use a technique known as [Remote Caching](https://turborepo.dev/docs/core-concepts/remote-caching) to share cache artifacts across machines, enabling you to share build caches with your team and CI/CD pipelines.
-
-By default, Turborepo will cache locally. To enable Remote Caching you will need an account with Vercel. If you don't have an account you can [create one](https://vercel.com/signup?utm_source=turborepo-examples), then enter the following commands:
+```bash
+docker-compose up -d redis postgres
 
 ```
-cd my-turborepo
 
-# With [global `turbo`](https://turborepo.dev/docs/getting-started/installation#global-installation) installed (recommended)
-turbo login
+### 4. Install Dependencies & Run App (Development mode)
 
-# Without [global `turbo`](https://turborepo.dev/docs/getting-started/installation#global-installation), use your package manager
-npx turbo login
-yarn exec turbo login
-pnpm exec turbo login
-```
+```bash
+# Install Node dependencies
+bun install
+# Initialize Database
+bun turbo db:migrate
 
-This will authenticate the Turborepo CLI with your [Vercel account](https://vercel.com/docs/concepts/personal-accounts/overview).
-
-Next, you can link your Turborepo to your Remote Cache by running the following command from the root of your Turborepo:
+# Start the Next.js development server
+bun run dev
 
 ```
-# With [global `turbo`](https://turborepo.dev/docs/getting-started/installation#global-installation) installed (recommended)
-turbo link
 
-# Without [global `turbo`](https://turborepo.dev/docs/getting-started/installation#global-installation), use your package manager
-npx turbo link
-yarn exec turbo link
-pnpm exec turbo link
-```
+The web app should now be running at `http://localhost:3000`.
 
-## Useful Links
 
-Learn more about the power of Turborepo:
+> **Note:** Ensure Docker is running, as the Typescript worker needs to spawn containers.
 
-- [Tasks](https://turborepo.dev/docs/crafting-your-repository/running-tasks)
-- [Caching](https://turborepo.dev/docs/crafting-your-repository/caching)
-- [Remote Caching](https://turborepo.dev/docs/core-concepts/remote-caching)
-- [Filtering](https://turborepo.dev/docs/crafting-your-repository/running-tasks#using-filters)
-- [Configuration Options](https://turborepo.dev/docs/reference/configuration)
-- [CLI Usage](https://turborepo.dev/docs/reference/command-line-reference)
+---
+
+
+## 👤 Author
+
+**Pankaj Yadav**
+
+* GitHub: [@pankajyadav-dev]()
+* LinkedIn: [Pankaj Yadav]()
+

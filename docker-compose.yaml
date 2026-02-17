@@ -8,7 +8,7 @@ services:
     environment:
       - NODE_ENV=development
       - WATCHPACK_POLLING=true
-      - DATABASE_URL=postgresql://virat:virat123@postgres:5432/xforcesdb
+      - DATABASE_URL=postgres://virat:virat123@postgres:5432/xforcesdb
       - REDIS_URL=redis://redisdb:6379/1
     volumes:
       - ./apps/xforces:/app/apps/xforces
