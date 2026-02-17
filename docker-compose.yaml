@@ -7,16 +7,18 @@ services:
     restart: always
     environment:
       - NODE_ENV=development
-      - WATCHPACK_POLLING=true
+      # - WATCHPACK_POLLING=true
       - DATABASE_URL=postgres://virat:virat123@postgres:5432/xforcesdb
       - REDIS_URL=redis://redisdb:6379/1
+      - NEXT_TURBOPACK_EXPERIMENTAL_USE_SYSTEM_TLS_CERTS=1
     volumes:
       - ./apps/xforces:/app/apps/xforces
       - /app/apps/xforces/node_modules
       - ./apps/xforces/.env:/app/apps/xforces/.env
       - /app/node_modules
       - /app/apps/xforces/.next
-      - ./packages/db:/app/packages/db
+      - ./packages/db/.env:/app/packages/db/.env
+      # - /app/packages/db/node_modules
     ports:
       - "3000:3000" 
     depends_on:
@@ -37,11 +39,12 @@ services:
       - CONTAINER_NAME=viratubuntu/xforces-runner:latest
       - MAX_OUTPUT_SIZE=100*1024
     volumes:
-      - ./apps/engine/src:/app/apps/engine/src
-      - ./apps/engine/package.json:/app/apps/engine/package.json
+      - ./apps/engine:/app/apps/engine
       - ./apps/engine/.env:/app/apps/engine/.env
       - /app/apps/engine/node_modules
       - /var/run/docker.sock:/var/run/docker.sock
+      - ./packages/db/.env:/app/packages/db/.env
+      # - /app/packages/db/node_modules 
     depends_on:
       - redis
       - postgres
