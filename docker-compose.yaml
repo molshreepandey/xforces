@@ -30,6 +30,7 @@ services:
       dockerfile: apps/engine/Dockerfile.dev
     restart: always
     environment:
+      - DATABASE_URL=postgres://virat:virat123@postgres:5432/xforcesdb
       - REDIS_URL=redis://redisdb:6379/1
       - CONSUMER_NAME=worker_1
       - STREAM_KEY=tasks
@@ -43,6 +44,7 @@ services:
       - /var/run/docker.sock:/var/run/docker.sock
     depends_on:
       - redis
+      - postgres
 
   postgres:
     image: postgres:15-alpine

@@ -17,6 +17,7 @@
         "ioredis": "^5.9.2",
       },
       "devDependencies": {
+        "@repo/db": "workspace:*",
         "@repo/types": "workspace:*",
         "@repo/typescript-config": "workspace:*",
         "@types/bun": "latest",
