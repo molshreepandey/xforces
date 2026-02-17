@@ -3,12 +3,14 @@ import { docker } from "./docker";
 import { CONTAINER_NAME } from "..";
 import { Writable } from "stream";
 import Dockerode from "dockerode";
+import { prisma } from "@repo/db";
 
 const MAX_OUTPUT_SIZE = 100 * 1024;
 
 export default async function test(payload: SubmissionPayload) {
   let container: Dockerode.Container | undefined;
   let stream: NodeJS.ReadWriteStream | undefined;
+  let finaloutput: {userid: string,message:string} = {userid: payload.userid, message:""};
   try {
     const codeBase64 = Buffer.from(payload.code).toString("base64");
     console.log("inside the tester");
@@ -83,14 +85,18 @@ export default async function test(payload: SubmissionPayload) {
     if (exicutionresult.StatusCode === 0) {
       console.log("success");
       console.log(output);
+      finaloutput = {userid: payload.userid, message:"successfull"};
     } else {
       console.log("error");
       console.log(errorOutput);
+      finaloutput = {userid: payload.userid, message:"failed"};
     }
   } catch (err: any) {
     console.log("error");
     console.log(err);
     console.log("error message");
+      finaloutput = {userid: payload.userid, message:"Time Limit exceeded"};
+    
     console.log(err.message);
   } finally {
     if (stream) {
@@ -98,6 +104,15 @@ export default async function test(payload: SubmissionPayload) {
     }
     if (container) {
       await container.remove({force:true});
+    }
+    if(finaloutput){
+    await prisma.submission.create({
+      data:{
+        userId: finaloutput.userid,
+        status: "completed",
+        remark: finaloutput.message
+      }
+    })
     }
   }
 }
