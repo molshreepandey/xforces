@@ -1,5 +1,6 @@
 "use client";
 import { SubmitCode } from "@/actions/editor";
+import { PollSubmissionStatus } from "@/actions/pollStatus";
 import { CodeEditorSchema } from "@/lib/editor/editor";
 import dynamic from "next/dynamic";
 import { useRef, useState } from "react";
@@ -18,6 +19,36 @@ export default function editorpage({
   const editorRef = useRef<any>(null);
   const [submitting, setSubmitting] = useState(false);
   const [result, setResult] = useState<string | null>(null);
+
+  const pollForResult = async (taskId: string) => {
+    const MAX_ATTEMPTS = 60; // 2 minutes max
+    let attempts = 0;
+
+    while (attempts < MAX_ATTEMPTS) {
+      await new Promise((resolve) => setTimeout(resolve, 2000));
+      attempts++;
+
+      try {
+        const status = await PollSubmissionStatus(taskId);
+
+        if (status && status.state === "completed") {
+          setResult(`Result: ${status.remark}`);
+          setSubmitting(false);
+          return;
+        }
+
+        setResult(`Judging... (${attempts * 2}s)`);
+      } catch {
+        setResult("Error checking status. Please try again.");
+        setSubmitting(false);
+        return;
+      }
+    }
+
+    // Timed out
+    setResult("Judging timed out. Please check back later.");
+    setSubmitting(false);
+  };
 
   return (
     <div className="flex flex-col h-full">
@@ -54,16 +85,17 @@ export default function editorpage({
             try {
               const id = await SubmitCode({
                 code: editorRef.current.getValue() as string,
-                userid: userid,
+                userId: userid,
                 memory: "512",
                 timelimit: "1000",
                 input: codeEditorParam.content.input,
                 output: codeEditorParam.content.output,
               });
-              setResult(`Submitted! Task ID: ${id.taskId}`);
+              setResult(`Submitted! Judging...`);
+              // Start polling for results
+              pollForResult(id.taskId as string);
             } catch (e) {
               setResult("Submission failed. Please try again.");
-            } finally {
               setSubmitting(false);
             }
           }}

@@ -24,7 +24,8 @@ RUN bun install
 FROM base AS builder
 WORKDIR /app
 COPY --from=installer /app/ .
-RUN bun run build
+ARG DATABASE_URL
+RUN DATABASE_URL=$DATABASE_URL bun run build --filter=engine
 
 FROM node:20.10.0-alpine AS final
 RUN apk add libstdc++
