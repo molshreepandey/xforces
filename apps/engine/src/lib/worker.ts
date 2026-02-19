@@ -27,21 +27,30 @@ export default async function startWorker({
       );
 
       if (!results) continue;
-      console.log(results);
+      // console.log(results);
       await new Promise((resolve) => setTimeout(resolve, 2000));
       const messages: any = results[0];
-      console.log(messages);
+      // console.log(messages);
       const task = messages[1][0];
-      console.log("task");
-      console.log(task);
+      // console.log("task");
+      // console.log(task);
       const taskid = task[0];
-      console.log("taskid");
-      console.log(taskid);
+      // console.log("taskid");
+      // console.log(taskid);
       const taskcode = task[1];
-      console.log(taskcode);
+      // console.log(taskcode);
       const jsonObject: SubmissionPayload = convertToJson(taskcode);
-      console.log(jsonObject);
-      await test(jsonObject);
+      // console.log(jsonObject);
+      console.log("ubbmited to tester");
+      const resultMessage = await test(jsonObject);
+
+      // Update Redis status hash so the frontend can poll for results
+      console.log("updating redis");
+      await redis.hset(`status:${taskid}`, {
+        state: "completed",
+        remark: resultMessage,
+      });
+
       // await new Promise((resolve) => setTimeout(resolve, 5000));
       await redis.xack(STREAM_KEY, GROUP_NAME, taskid);
       await redis.xdel(STREAM_KEY, taskid);

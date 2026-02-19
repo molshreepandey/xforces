@@ -4,23 +4,22 @@ import { CONTAINER_NAME } from "..";
 import { Writable } from "stream";
 import Dockerode from "dockerode";
 import { prisma } from "@repo/db";
+import redis from "./redis";
 
 const MAX_OUTPUT_SIZE = 100 * 1024;
 
-export default async function test(payload: SubmissionPayload) {
+export default async function test(payload: SubmissionPayload): Promise<string> {
   let container: Dockerode.Container | undefined;
   let stream: NodeJS.ReadWriteStream | undefined;
-  let finaloutput: {userid: string,message:string} = {userid: payload.userid, message:""};
+  let finaloutput: { userid: string, message: string } = { userid: payload.userId, message: "" };
+  console.log(payload);
   try {
     const codeBase64 = Buffer.from(payload.code).toString("base64");
-    console.log("inside the tester");
-    console.log(payload);
     const cmd = [
       "/bin/sh",
       "-c",
       `echo "${codeBase64}" | base64 -d > main.cpp && g++ -o app main.cpp && ./app`,
     ];
-    console.log("container created");
     container = await docker.createContainer({
       Image: CONTAINER_NAME,
       Cmd: cmd,
@@ -29,11 +28,10 @@ export default async function test(payload: SubmissionPayload) {
       StdinOnce: true,
       AttachStdin: true,
       HostConfig: {
-        Memory: Number(payload.memory)*1024*1024,
+        Memory: Number(payload.memory) * 1024 * 1024,
         NetworkMode: "none",
       },
     });
-    console.log("stream created");
     stream = await container.attach({
       hijack: true,
       stream: true,
@@ -41,7 +39,6 @@ export default async function test(payload: SubmissionPayload) {
       stdout: true,
       stderr: true,
     });
-    console.log("container commadn to start");
     let output = "";
     let errorOutput = "";
     let isOOM = false;
@@ -67,52 +64,48 @@ export default async function test(payload: SubmissionPayload) {
 
     const timeLimit = () =>
       new Promise((_, reject) =>
-        setTimeout(() => reject(new Error("TLE")), Number(payload.timelimit)+800),
+        setTimeout(() => reject(new Error("TLE")), Number(payload.timelimit) + 800),
       );
 
     await container.start();
 
-    console.log("container  start");
     if (payload.input) {
       stream.write(String(payload.input));
     }
     stream.end();
     const ContainerPromise = container.wait();
-    const exicutionresult:{StatusCode: number}  = await Promise.race([ContainerPromise, timeLimit()]);
-    console.log("exicution result");
-    console.log(exicutionresult);
-    console.log("Execution finished with code:", exicutionresult.StatusCode);
+    const exicutionresult: { StatusCode: number } = await Promise.race([ContainerPromise, timeLimit()]);
     if (exicutionresult.StatusCode === 0) {
       console.log("success");
       console.log(output);
-      finaloutput = {userid: payload.userid, message:"successfull"};
+      console.log(payload.output);
+      let status = (output.trim() === payload.output);
+      console.log(status);
+      finaloutput = status ? { userid: payload.userId, message: "successfull" } : { userid: payload.userId, message: "Test case failed" }
+
     } else {
       console.log("error");
       console.log(errorOutput);
-      finaloutput = {userid: payload.userid, message:"failed"};
+      finaloutput = { userid: payload.userId, message: "failed" };
     }
   } catch (err: any) {
-    console.log("error");
-    console.log(err);
-    console.log("error message");
-      finaloutput = {userid: payload.userid, message:"Time Limit exceeded"};
-    
-    console.log(err.message);
+    finaloutput = { userid: payload.userId, message: "Time Limit exceeded" };
   } finally {
     if (stream) {
       stream.end();
     }
     if (container) {
-      await container.remove({force:true});
+      await container.remove({ force: true });
     }
-    if(finaloutput){
-    await prisma.submission.create({
-      data:{
-        userId: finaloutput.userid,
-        status: "completed",
-        remark: finaloutput.message
-      }
-    })
-    }
+    console.log("final output");
+    console.log(finaloutput);
+      await prisma.submission.create({
+        data: {
+          userId: payload.userId,
+          status: "completed",
+          remark: finaloutput.message
+        }
+      })
+    return finaloutput?.message || "unknown";
   }
 }

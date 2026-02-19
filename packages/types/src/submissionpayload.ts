@@ -1,5 +1,5 @@
 export type SubmissionPayload= {
-  userid: string,
+  userId: string,
   code: string,
   input: string,
   output: string,
