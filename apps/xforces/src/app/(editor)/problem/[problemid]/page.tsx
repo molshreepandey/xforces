@@ -22,6 +22,8 @@ export default async function ProblemPage({
       id: true,
       code: true,
       content: true,
+      headercode:true,
+      maincode:true,
       title: true,
       input: true,
       output: true,
@@ -64,7 +66,9 @@ export default async function ProblemPage({
           <Editorpage
             codeEditorParam={{
               content: {
+                header: problem.headercode,
                 code: problem.code,
+                main: problem.maincode,
                 input: problem.input,
                 output: problem.output,
               },

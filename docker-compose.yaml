@@ -17,7 +17,7 @@ services:
       - ./apps/xforces/.env:/app/apps/xforces/.env
       - /app/node_modules
       - /app/apps/xforces/.next
-      - ./packages/db/.env:/app/packages/db/.env
+      - ./packages/db/:/app/packages/db/
       # - /app/packages/db/node_modules
     ports:
       - "3000:3000" 
@@ -43,7 +43,7 @@ services:
       - ./apps/engine/.env:/app/apps/engine/.env
       - /app/apps/engine/node_modules
       - /var/run/docker.sock:/var/run/docker.sock
-      - ./packages/db/.env:/app/packages/db/.env
+      - ./packages/db/:/app/packages/db/
       # - /app/packages/db/node_modules 
     depends_on:
       - redis
