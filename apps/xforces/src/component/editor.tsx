@@ -21,11 +21,11 @@ export default function editorpage({
   const [result, setResult] = useState<string | null>(null);
 
   const pollForResult = async (taskId: string) => {
-    const MAX_ATTEMPTS = 60; // 2 minutes max
+    const MAX_ATTEMPTS = 60; 
     let attempts = 0;
 
     while (attempts < MAX_ATTEMPTS) {
-      await new Promise((resolve) => setTimeout(resolve, 2000));
+      await new Promise((resolve) => setTimeout(resolve, 1000));
       attempts++;
 
       try {
@@ -37,15 +37,13 @@ export default function editorpage({
           return;
         }
 
-        setResult(`Judging... (${attempts * 2}s)`);
+        setResult(`Judging... (${attempts}s)`);
       } catch {
         setResult("Error checking status. Please try again.");
         setSubmitting(false);
         return;
       }
     }
-
-    // Timed out
     setResult("Judging timed out. Please check back later.");
     setSubmitting(false);
   };
@@ -62,7 +60,6 @@ export default function editorpage({
         </span>
       </div>
 
-      {/* Editor area — 3/4 height */}
       <div className="h-3/4 min-h-0">
         <MonacoEditor
           content={codeEditorParam.content}
@@ -84,7 +81,7 @@ export default function editorpage({
             setResult(null);
             try {
               const id = await SubmitCode({
-                code: editorRef.current.getValue() as string,
+                code: `${codeEditorParam.content.header+"\n"+ editorRef.current.getValue() as string +"\n"+ codeEditorParam.content.main}`,
                 userId: userid,
                 memory: "512",
                 timelimit: "1000",
@@ -92,7 +89,6 @@ export default function editorpage({
                 output: codeEditorParam.content.output,
               });
               setResult(`Submitted! Judging...`);
-              // Start polling for results
               pollForResult(id.taskId as string);
             } catch (e) {
               setResult("Submission failed. Please try again.");

@@ -5,6 +5,8 @@ export interface CodeEditorSchema {
   language: EditorLang;
   content: {
     code: string;
+    main: string;
+    header: string;
     input: string;
     output: string;
   };

@@ -20,6 +20,12 @@ export default async function Navbar() {
         >
           Problems
         </Link>
+        <Link
+          href="/submission"
+          className="text-text-muted hover:text-text text-sm font-medium transition-colors"
+        >
+          Submission
+        </Link>
       </div>
       <div className="flex items-center gap-4">
         {session && (

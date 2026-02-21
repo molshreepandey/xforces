@@ -6,10 +6,9 @@ export interface QuestionBoardSchema {
 }
 
 export default function QuestionBoard({ question }: QuestionBoardSchema) {
-  // Dedent the content — remove common leading whitespace from template literals
   const dedented = question
     .split('\n')
-    .map(line => line.replace(/^      /, ''))  // remove up to 6 spaces of indentation
+    .map(line => line.replace(/^      /, '')) 
     .join('\n')
     .trim();
 
