@@ -16,6 +16,7 @@ export default function editorpage({
   codeEditorParam: Omit<CodeEditorSchema, "editorRef">;
   userid: string;
 }) {
+  // console.log(codeEditorParam);
   const editorRef = useRef<any>(null);
   const [submitting, setSubmitting] = useState(false);
   const [result, setResult] = useState<string | null>(null);
@@ -83,6 +84,7 @@ export default function editorpage({
               const id = await SubmitCode({
                 code: `${codeEditorParam.content.header+"\n"+ editorRef.current.getValue() as string +"\n"+ codeEditorParam.content.main}`,
                 userId: userid,
+                problemid: codeEditorParam.content.problemid,
                 memory: "512",
                 timelimit: "1000",
                 input: codeEditorParam.content.input,

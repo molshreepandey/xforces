@@ -8,4 +8,5 @@ maincode    String
 input       String
 output      String
 createdAt   DateTime  @default(now())
+submissions Submission[]
 }

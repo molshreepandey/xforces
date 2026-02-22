@@ -7,7 +7,7 @@ export default async function setupGroup({
 }) {
   try {
     await redis.xgroup("CREATE", STREAM_KEY, GROUP_NAME, "0", "MKSTREAM");
-    console.log("worker group created.");
+    // console.log("worker group created.");
   } catch (err: any) {
     if (err.message.includes("BUSYGROUP")) {
       console.log("Group already exists, skipping creation.");

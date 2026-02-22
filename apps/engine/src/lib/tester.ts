@@ -12,7 +12,8 @@ export default async function test(payload: SubmissionPayload): Promise<string> 
   let container: Dockerode.Container | undefined;
   let stream: NodeJS.ReadWriteStream | undefined;
   let finaloutput: { userid: string, message: string } = { userid: payload.userId, message: "" };
-  console.log(payload);
+  // console.log("payload\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n");
+  // console.log(payload);
   try {
     const codeBase64 = Buffer.from(payload.code).toString("base64");
     const cmd = [
@@ -77,15 +78,15 @@ export default async function test(payload: SubmissionPayload): Promise<string> 
     const exicutionresult: { StatusCode: number } = await Promise.race([ContainerPromise, timeLimit()]);
     if (exicutionresult.StatusCode === 0) {
       console.log("success");
-      console.log(output);
-      console.log(payload.output);
+      // console.log(output);
+      // console.log(payload.output);
       let status = (output.trim() === payload.output);
-      console.log(status);
+      // console.log(status);
       finaloutput = status ? { userid: payload.userId, message: "successfull" } : { userid: payload.userId, message: "Test case failed" }
 
     } else {
-      console.log("error");
-      console.log(errorOutput);
+      // console.log("error");
+      // console.log(errorOutput);
       finaloutput = { userid: payload.userId, message: "failed" };
     }
   } catch (err: any) {
@@ -97,12 +98,13 @@ export default async function test(payload: SubmissionPayload): Promise<string> 
     if (container) {
       await container.remove({ force: true });
     }
-    console.log("final output");
-    console.log(finaloutput);
+    // console.log("final output");
+    // console.log(finaloutput);
       await prisma.submission.create({
         data: {
           userId: payload.userId,
           status: "completed",
+          problemid: payload.problemid,
           remark: finaloutput.message
         }
       })

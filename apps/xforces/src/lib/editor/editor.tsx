@@ -4,6 +4,7 @@ import { EditorLang } from "@/types/editor";
 export interface CodeEditorSchema {
   language: EditorLang;
   content: {
+    problemid: number,
     code: string;
     main: string;
     header: string;
@@ -18,7 +19,7 @@ export default function CodeEditor({
   editorRef,
 }: CodeEditorSchema) {
   const handleEditorChange: OnChange = (value, event) => {
-    console.log("Current code:", value);
+    // console.log("Current code:", value);
   };
   function handleEditorDidMount(editor: any, monaco: Monaco) {
     editorRef.current = editor;
