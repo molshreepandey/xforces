@@ -11,6 +11,7 @@ export default async function SubmissionPage() {
     },
     select: {
       id: true,
+      problemid:true,
       status: true,
       remark: true,
       submitedAt: true,
@@ -41,7 +42,7 @@ export default async function SubmissionPage() {
                   key={entry.id}
                   className="border-b border-border last:border-b-0 hover:bg-surface-hover transition-colors"
                 >
-                  <td className="px-4 py-3 text-text-muted">{entry.id}</td>
+                  <td className="px-4 py-3 text-text-muted">{entry.problemid}</td>
                   <td className="px-4 py-3">
                     <span
                       className={

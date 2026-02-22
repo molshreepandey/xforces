@@ -29,10 +29,10 @@ export default async function ProblemPage({
       output: true,
     },
   });
-
   if (!problem) {
     return redirect("/error?message=wrongproblemid");
   }
+
 
   const user = await auth();
 
@@ -66,6 +66,7 @@ export default async function ProblemPage({
           <Editorpage
             codeEditorParam={{
               content: {
+                problemid: problem.id,
                 header: problem.headercode,
                 code: problem.code,
                 main: problem.maincode,
