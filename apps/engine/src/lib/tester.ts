@@ -13,7 +13,7 @@ export default async function test(payload: SubmissionPayload): Promise<string> 
   let stream: NodeJS.ReadWriteStream | undefined;
   let finaloutput: { userid: string, message: string } = { userid: payload.userId, message: "" };
   // console.log("payload\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n");
-  // console.log(payload);
+  console.log(payload);
   try {
     const codeBase64 = Buffer.from(payload.code).toString("base64");
     const cmd = [
