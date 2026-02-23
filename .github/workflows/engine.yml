@@ -27,3 +27,5 @@ jobs:
               file: ./apps/engine/Dockerfile
               push: true
               tags: viratubuntu/engine:latest
+              build-args: |
+                DATABASE_URL=${{ secrets.DATABASE_URL }}

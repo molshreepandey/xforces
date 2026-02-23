@@ -27,3 +27,5 @@ jobs:
               file: ./apps/xforces/Dockerfile
               push: true
               tags: viratubuntu/xforces:latest
+              build-args: |
+                DATABASE_URL=${{ secrets.DATABASE_URL }}
