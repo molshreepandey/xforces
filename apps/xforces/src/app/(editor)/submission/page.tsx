@@ -30,6 +30,7 @@ export default async function SubmissionPage() {
           <table className="w-full text-left text-sm">
             <thead>
               <tr className="border-b border-border">
+                <th className="px-4 py-3 text-text-muted font-medium w-16">Id</th>
                 <th className="px-4 py-3 text-text-muted font-medium w-16">Problem Id</th>
                 <th className="px-4 py-3 text-text-muted font-medium">Status</th>
                 <th className="px-4 py-3 text-text-muted font-medium">Remark</th>
@@ -37,11 +38,12 @@ export default async function SubmissionPage() {
               </tr>
             </thead>
             <tbody>
-              {submissions.map((entry) => (
+              {submissions.map((entry,idx) => (
                 <tr
                   key={entry.id}
                   className="border-b border-border last:border-b-0 hover:bg-surface-hover transition-colors"
                 >
+                  <th className="px-4 py-3 text-text-muted">{idx+1}</th>
                   <td className="px-4 py-3 text-text-muted">{entry.problemid}</td>
                   <td className="px-4 py-3">
                     <span
