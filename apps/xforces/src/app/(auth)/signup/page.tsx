@@ -36,7 +36,7 @@ export default async function signupPage() {
             name="confirmpassword"
             placeholder="Enter Password again"
           />
-          <SubmitButton/>
+          <SubmitButton content="SignUp" loading="Signing Up..."/>
         </form>
 
         <p className="text-center text-text-muted text-sm mt-6">

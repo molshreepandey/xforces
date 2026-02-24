@@ -1,25 +1,43 @@
 import { auth } from "@/lib/auth";
 import { prisma } from "@repo/db";
 import Navbar from "@/component/navbar";
+import Link from "next/link";
+import { getVisiblePages } from "@/lib/pagination/getpages";
 
-export default async function SubmissionPage() {
+export default async function SubmissionPage({
+  searchParams,
+}: {
+  searchParams: Promise<{ page: number }>;
+}) {
+  const param = await searchParams;
+  const { page } = param;
   const user = await auth();
   const userid = user?.user?.id;
-  const submissions = await prisma.submission.findMany({
-    where: {
-      userId: userid,
-    },
-    select: {
-      id: true,
-      problemid:true,
-      status: true,
-      remark: true,
-      submitedAt: true,
-    },
-    orderBy: {
-      submitedAt: "desc",
-    },
-  });
+  const currentpage = Number(page) || 1;
+  const pageSize = 20;
+  const [submissions, totalsubmissions] = await Promise.all([
+    prisma.submission.findMany({
+      where: {
+        userId: userid,
+      },
+      select: {
+        id: true,
+        problemid: true,
+        status: true,
+        remark: true,
+        submitedAt: true,
+      },
+      orderBy: {
+        submitedAt: "desc",
+      },
+      take: pageSize,
+      skip: (currentpage - 1) * pageSize,
+    }),
+    prisma.submission.count({ where: { userId: userid } }),
+  ]);
+  const totalPages = Math.ceil(totalsubmissions / pageSize);
+
+  const visiblePages = getVisiblePages(currentpage, totalPages);
 
   return (
     <div className="min-h-screen">
@@ -30,21 +48,33 @@ export default async function SubmissionPage() {
           <table className="w-full text-left text-sm">
             <thead>
               <tr className="border-b border-border">
-                <th className="px-4 py-3 text-text-muted font-medium w-16">Id</th>
-                <th className="px-4 py-3 text-text-muted font-medium w-16">Problem Id</th>
-                <th className="px-4 py-3 text-text-muted font-medium">Status</th>
-                <th className="px-4 py-3 text-text-muted font-medium">Remark</th>
-                <th className="px-4 py-3 text-text-muted font-medium">Submitted At</th>
+                <th className="px-4 py-3 text-text-muted font-medium w-16">
+                  Id
+                </th>
+                <th className="px-4 py-3 text-text-muted font-medium w-16">
+                  Problem Id
+                </th>
+                <th className="px-4 py-3 text-text-muted font-medium">
+                  Status
+                </th>
+                <th className="px-4 py-3 text-text-muted font-medium">
+                  Remark
+                </th>
+                <th className="px-4 py-3 text-text-muted font-medium">
+                  Submitted At
+                </th>
               </tr>
             </thead>
             <tbody>
-              {submissions.map((entry,idx) => (
+              {submissions.map((entry, idx) => (
                 <tr
                   key={entry.id}
                   className="border-b border-border last:border-b-0 hover:bg-surface-hover transition-colors"
                 >
-                  <th className="px-4 py-3 text-text-muted">{idx+1}</th>
-                  <td className="px-4 py-3 text-text-muted">{entry.problemid}</td>
+                  <th className="px-4 py-3 text-text-muted">{((currentpage-1) * pageSize) + idx + 1}</th>
+                  <td className="px-4 py-3 text-text-muted">
+                    {entry.problemid}
+                  </td>
                   <td className="px-4 py-3">
                     <span
                       className={
@@ -58,7 +88,9 @@ export default async function SubmissionPage() {
                       {entry.status}
                     </span>
                   </td>
-                  <td className="px-4 py-3 text-text-muted">{entry.remark ?? "—"}</td>
+                  <td className="px-4 py-3 text-text-muted">
+                    {entry.remark ?? "—"}
+                  </td>
                   <td className="px-4 py-3 text-text-muted">
                     {entry.submitedAt.toLocaleDateString()}
                   </td>
@@ -66,7 +98,10 @@ export default async function SubmissionPage() {
               ))}
               {submissions.length === 0 && (
                 <tr>
-                  <td colSpan={4} className="px-4 py-8 text-center text-text-muted">
+                  <td
+                    colSpan={4}
+                    className="px-4 py-8 text-center text-text-muted"
+                  >
                     No submissions yet.
                   </td>
                 </tr>
@@ -74,6 +109,45 @@ export default async function SubmissionPage() {
             </tbody>
           </table>
         </div>
+      </div>
+      <div className="flex justify-center items-center gap-2 mt-8 w-full">
+        {currentpage > 1 && (
+          <Link
+            href={`?page=${currentpage - 1}`}
+            className="min-w-[36px] h-9 flex items-center justify-center rounded-md text-sm font-medium text-text-muted border border-transparent hover:bg-surface-hover hover:text-text transition-all duration-200"
+          >
+            {"<"}
+          </Link>
+        )}
+      
+        {visiblePages.map((item, index) => {
+        
+          const isActive = item === currentpage;
+          return (
+            <Link
+              key={item}
+              href={`?page=${item}`}
+              aria-current={isActive ? "page" : undefined}
+              className={`min-w-[36px] h-9 flex items-center justify-center rounded-md text-sm font-medium transition-all duration-200 ${
+                isActive
+                  ? "bg-primary text-white border border-primary shadow-sm"
+                  : "text-text-muted border border-transparent hover:bg-surface-hover hover:text-text"
+              }`}
+            >
+              {item}
+            </Link>
+          );
+        })}
+      
+        {currentpage < totalPages && (
+          <Link
+            href={`?page=${currentpage + 1}`}
+            className="min-w-[36px] h-9 flex items-center justify-center rounded-md text-sm font-medium text-text-muted border border-transparent hover:bg-surface-hover hover:text-text transition-all duration-200"
+          >
+            {">"}
+          </Link>
+        )}
+      
       </div>
     </div>
   );
