@@ -1,6 +1,5 @@
-import { signIn, signOut } from "@/lib/auth";
-import { prisma } from "@repo/db";
-import argon2 from "argon2";
+import { SignupUser } from "@/actions/auth";
+import { SubmitButton } from "@/component/button/signupbutton";
 import Link from "next/link";
 
 export default async function signupPage() {
@@ -10,17 +9,7 @@ export default async function signupPage() {
         <h1 className="text-2xl font-bold text-center mb-6">Create Account</h1>
 
         <form
-          action={async (FormData) => {
-            "use server";
-            const pwHash = await argon2.hash(FormData.get("password") as string);
-            await prisma.user.create({
-              data: {
-                name: FormData.get("name") as string,
-                password: pwHash,
-                email: FormData.get("email") as string,
-              },
-            });
-          }}
+          action={SignupUser}
           className="flex flex-col gap-4"
         >
           <input
@@ -41,12 +30,19 @@ export default async function signupPage() {
             name="password"
             placeholder="Password"
           />
-          <button
+          <input
+            className="w-full px-3 py-2.5 bg-background border border-border rounded-lg text-text placeholder-text-muted text-sm focus:outline-none focus:border-accent transition-colors"
+            type="password"
+            name="confirmpassword"
+            placeholder="Enter Password again"
+          />
+          <SubmitButton/>
+          {/*<button
             className="w-full py-2.5 bg-accent text-background font-semibold rounded-lg hover:bg-accent-hover transition-colors text-sm cursor-pointer"
             type="submit"
           >
             Sign Up
-          </button>
+          </button>*/}
         </form>
 
         <p className="text-center text-text-muted text-sm mt-6">
