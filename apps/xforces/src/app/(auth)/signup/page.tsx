@@ -37,12 +37,6 @@ export default async function signupPage() {
             placeholder="Enter Password again"
           />
           <SubmitButton/>
-          {/*<button
-            className="w-full py-2.5 bg-accent text-background font-semibold rounded-lg hover:bg-accent-hover transition-colors text-sm cursor-pointer"
-            type="submit"
-          >
-            Sign Up
-          </button>*/}
         </form>
 
         <p className="text-center text-text-muted text-sm mt-6">

@@ -5,6 +5,7 @@ import QuestionBoard from "@/component/questionBoard";
 import { EditorLang } from "@/types/editor";
 import { auth } from "@/lib/auth";
 import Link from "next/link";
+import Navbar from "@/component/navbar";
 
 export default async function ProblemPage({
   params,
@@ -22,8 +23,8 @@ export default async function ProblemPage({
       id: true,
       code: true,
       content: true,
-      headercode:true,
-      maincode:true,
+      headercode: true,
+      maincode: true,
       title: true,
       input: true,
       output: true,
@@ -33,25 +34,18 @@ export default async function ProblemPage({
     return redirect("/error?message=wrongproblemid");
   }
 
-
   const user = await auth();
 
   return (
     <div className="h-screen flex flex-col">
       {/* Top bar */}
+      <Navbar />
       <div className="flex items-center justify-between px-4 py-2 bg-surface border-b border-border shrink-0">
         <div className="flex items-center gap-4">
-          <Link href="/" className="text-accent font-bold text-lg">
-            XForces
-          </Link>
-          <span className="text-border">|</span>
-          <Link href="/problem" className="text-text-muted hover:text-text text-sm transition-colors">
-            Problems
-          </Link>
+          <h1 className="text-sm font-medium text-text">
+            {problem.id}. {problem.title}
+          </h1>
         </div>
-        <h1 className="text-sm font-medium text-text">
-          {problem.id}. {problem.title}
-        </h1>
       </div>
 
       {/* Split panel */}
