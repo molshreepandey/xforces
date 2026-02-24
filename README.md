@@ -37,7 +37,7 @@ The platform follows a microservices-inspired architecture to separate the web i
 -   **Database**: PostgreSQL (Prisma ORM)
 
 ### Execution & Infrastructure
--   **Worker Service**: Rust / [Bun](https://bun.sh/) (Optimized for low-latency execution)
+-   **Worker Service**: Typescript / [Bun](https://bun.sh/)
 -   **Containerization**: Docker & Docker Compose
 -   **Queue & Caching**: Redis
 
