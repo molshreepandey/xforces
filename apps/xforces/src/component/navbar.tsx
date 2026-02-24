@@ -5,7 +5,7 @@ import { redirect } from "next/navigation";
 export default async function Navbar() {
   const session = await auth();
   if (!session) {
-    return redirect("/signup");
+    return redirect("/signin");
   }
 
   return (
