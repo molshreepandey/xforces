@@ -1,4 +1,5 @@
 import { SignInCredential } from "@/actions/auth";
+import { SubmitButton } from "@/component/button/signupbutton";
 import SignInGoogle from "@/component/signingoogle";
 import { auth } from "@/lib/auth";
 import Link from "next/link";
@@ -32,12 +33,13 @@ export default async function signin() {
             placeholder="Password"
             name="password"
           />
-          <button
+          <SubmitButton content="SignIn" loading="Signing...."/>
+          {/*<button
             className="w-full py-2.5 bg-accent text-background font-semibold rounded-lg hover:bg-accent-hover transition-colors text-sm cursor-pointer"
             type="submit"
           >
             Sign In
-          </button>
+          </button>*/}
         </form>
 
         <p className="text-center text-text-muted text-sm mt-6">

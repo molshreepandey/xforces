@@ -4,7 +4,6 @@ import Editorpage from "@/component/editor";
 import QuestionBoard from "@/component/questionBoard";
 import { EditorLang } from "@/types/editor";
 import { auth } from "@/lib/auth";
-import Link from "next/link";
 import Navbar from "@/component/navbar";
 
 export default async function ProblemPage({

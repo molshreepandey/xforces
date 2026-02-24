@@ -1,6 +1,7 @@
 import { auth, signIn, signOut } from "@/lib/auth";
 import Link from "next/link";
 import { redirect } from "next/navigation";
+import { SubmitButton } from "./button/signupbutton";
 
 export default async function Navbar() {
   const session = await auth();
@@ -39,12 +40,13 @@ export default async function Navbar() {
                 await signOut();
               }}
             >
-              <button
+              <SubmitButton className={"px-4 py-1.5 text-sm rounded-md border border-border text-text-muted hover:text-text hover:border-text-muted transition-colors cursor-pointer"} content="Sign Out" loading="Signing Out..."/>
+              {/*<button
                 type="submit"
                 className="px-4 py-1.5 text-sm rounded-md border border-border text-text-muted hover:text-text hover:border-text-muted transition-colors cursor-pointer"
               >
                 Sign Out
-              </button>
+              </button>*/}
             </form>
           </>
         )}
@@ -55,12 +57,13 @@ export default async function Navbar() {
               await signIn();
             }}
           >
-            <button
+            <SubmitButton content="Sign In" loading="Signing..."/>
+            {/*<button
               type="submit"
               className="px-4 py-1.5 text-sm rounded-md bg-accent text-background font-medium hover:bg-accent-hover transition-colors cursor-pointer"
             >
               Sign In
-            </button>
+            </button>*/}
           </form>
         )}
       </div>
