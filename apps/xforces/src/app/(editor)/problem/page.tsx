@@ -1,14 +1,33 @@
 import Navbar from "@/component/navbar";
+import { PageIndex } from "@/component/pageindex";
+import { getVisiblePages } from "@/lib/pagination/getpages";
 import { prisma } from "@repo/db";
 import Link from "next/link";
 
-export default async function Problems() {
-  const problems = await prisma.questions.findMany({
-    select: {
-      id: true,
-      title: true,
-    },
-  });
+export default async function Problems({
+  searchParams,
+}: {
+  searchParams: Promise<{ page: number }>;
+}) {
+  const { page } = await searchParams;
+  const currentPage = Number(page) || 1;
+  const pageSize = 50;
+  const [problems, problemCount] = await Promise.all([
+    prisma.questions.findMany({
+      select: {
+        id: true,
+        title: true,
+      },
+      orderBy: {
+        id: "asc",
+      },
+      take: pageSize,
+      skip: (currentPage - 1) * pageSize,
+    }),
+    prisma.questions.count(),
+  ]);
+  const totalPages = Math.ceil(problemCount / pageSize);
+  const visiblePages = getVisiblePages(problemCount, totalPages);
 
   return (
     <div className="min-h-screen">
@@ -19,7 +38,9 @@ export default async function Problems() {
           <table className="w-full text-left text-sm">
             <thead>
               <tr className="border-b border-border">
-                <th className="px-4 py-3 text-text-muted font-medium w-16">#</th>
+                <th className="px-4 py-3 text-text-muted font-medium w-16">
+                  #
+                </th>
                 <th className="px-4 py-3 text-text-muted font-medium">Title</th>
               </tr>
             </thead>
@@ -42,7 +63,10 @@ export default async function Problems() {
               ))}
               {problems.length === 0 && (
                 <tr>
-                  <td colSpan={2} className="px-4 py-8 text-center text-text-muted">
+                  <td
+                    colSpan={2}
+                    className="px-4 py-8 text-center text-text-muted"
+                  >
                     No problems available yet.
                   </td>
                 </tr>
@@ -51,6 +75,11 @@ export default async function Problems() {
           </table>
         </div>
       </div>
+      <PageIndex
+        currentpage={currentPage}
+        visiblePages={visiblePages}
+        totalPages={totalPages}
+      />
     </div>
   );
 }

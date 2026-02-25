@@ -43,18 +43,17 @@ export default async function startWorker({
       // console.log(taskcode);
       const jsonObject: SubmissionPayload = convertToJson(taskcode);
       // console.log(jsonObject);
-      // console.log(jsonObject);
       console.log("ubbmited to tester");
       const resultMessage = await test(jsonObject);
 
-      // Update Redis status hash so the frontend can poll for results
-      // console.log("updating redis");
-      await redis.hset(`status:${taskid}`, {
+      const redispipeline = redis.pipeline();
+      redispipeline.hset(`status:${taskid}`, {
         state: "completed",
         remark: resultMessage,
       });
+      redispipeline.expire(`status:${taskid}`, 300);
+      await redispipeline.exec();
 
-      // await new Promise((resolve) => setTimeout(resolve, 5000));
       await redis.xack(STREAM_KEY, GROUP_NAME, taskid);
       await redis.xdel(STREAM_KEY, taskid);
     } catch (err) {
