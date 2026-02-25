@@ -4,7 +4,6 @@ import { CONTAINER_NAME } from "..";
 import { Writable } from "stream";
 import Dockerode from "dockerode";
 import { prisma } from "@repo/db";
-import redis from "./redis";
 
 const MAX_OUTPUT_SIZE = 100 * 1024;
 

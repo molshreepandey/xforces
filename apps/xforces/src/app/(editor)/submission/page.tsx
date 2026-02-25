@@ -1,8 +1,8 @@
 import { auth } from "@/lib/auth";
 import { prisma } from "@repo/db";
 import Navbar from "@/component/navbar";
-import Link from "next/link";
 import { getVisiblePages } from "@/lib/pagination/getpages";
+import { PageIndex } from "@/component/pageindex";
 
 export default async function SubmissionPage({
   searchParams,
@@ -14,7 +14,7 @@ export default async function SubmissionPage({
   const user = await auth();
   const userid = user?.user?.id;
   const currentpage = Number(page) || 1;
-  const pageSize = 20;
+  const pageSize = 50;
   const [submissions, totalsubmissions] = await Promise.all([
     prisma.submission.findMany({
       where: {
@@ -110,45 +110,7 @@ export default async function SubmissionPage({
           </table>
         </div>
       </div>
-      <div className="flex justify-center items-center gap-2 mt-8 w-full">
-        {currentpage > 1 && (
-          <Link
-            href={`?page=${currentpage - 1}`}
-            className="min-w-[36px] h-9 flex items-center justify-center rounded-md text-sm font-medium text-text-muted border border-transparent hover:bg-surface-hover hover:text-text transition-all duration-200"
-          >
-            {"<"}
-          </Link>
-        )}
-      
-        {visiblePages.map((item, index) => {
-        
-          const isActive = item === currentpage;
-          return (
-            <Link
-              key={item}
-              href={`?page=${item}`}
-              aria-current={isActive ? "page" : undefined}
-              className={`min-w-[36px] h-9 flex items-center justify-center rounded-md text-sm font-medium transition-all duration-200 ${
-                isActive
-                  ? "bg-primary text-white border border-primary shadow-sm"
-                  : "text-text-muted border border-transparent hover:bg-surface-hover hover:text-text"
-              }`}
-            >
-              {item}
-            </Link>
-          );
-        })}
-      
-        {currentpage < totalPages && (
-          <Link
-            href={`?page=${currentpage + 1}`}
-            className="min-w-[36px] h-9 flex items-center justify-center rounded-md text-sm font-medium text-text-muted border border-transparent hover:bg-surface-hover hover:text-text transition-all duration-200"
-          >
-            {">"}
-          </Link>
-        )}
-      
-      </div>
+      <PageIndex currentpage={currentpage} totalPages={totalPages} visiblePages={visiblePages}/>
     </div>
   );
 }
