@@ -3,7 +3,7 @@ run-name: Engine GitHub Actions
 on:
     push:
         branches:
-            - main
+            - production
         paths:
             - 'apps/engine/**'
             - 'packages/**'

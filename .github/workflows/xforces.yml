@@ -3,7 +3,7 @@ run-name: Xforces GitHub Actions
 on:
     push:
         branches:
-            - main
+            - production
         paths:
             - 'apps/xforces/**'
             - 'packages/**'
