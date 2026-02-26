@@ -37,7 +37,6 @@ export default async function ProblemPage({
 
   return (
     <div className="h-screen flex flex-col">
-      {/* Top bar */}
       <Navbar />
       <div className="flex items-center justify-between px-4 py-2 bg-surface border-b border-border shrink-0">
         <div className="flex items-center gap-4">
@@ -46,15 +45,11 @@ export default async function ProblemPage({
           </h1>
         </div>
       </div>
-
-      {/* Split panel */}
       <div className="flex flex-1 min-h-0">
-        {/* Left: Problem content only */}
         <div className="w-2/5 border-r border-border overflow-y-auto p-6">
           <QuestionBoard question={problem.content || ""} />
         </div>
 
-        {/* Right: Code editor */}
         <div className="w-3/5 min-h-0 flex flex-col">
           <Editorpage
             codeEditorParam={{
