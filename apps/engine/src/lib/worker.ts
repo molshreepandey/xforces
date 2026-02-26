@@ -27,23 +27,12 @@ export default async function startWorker({
       );
 
       if (!results) continue;
-      // console.log(results);
-      // await new Promise((resolve) => setTimeout(resolve, 2000));
       const messages: any = results[0];
-      // console.log(messages);
       const task = messages[1][0];
-      // console.log("task");
-      // console.log(task);
       const taskid = task[0];
-      // console.log("taskid");
-      // console.log(taskid);
       const taskcode = task[1];
-      // console.log("message\n\n\n\n\n\n\n\n\n\n\n");
-      // console.log(messages[1]);
-      // console.log(taskcode);
       const jsonObject: SubmissionPayload = convertToJson(taskcode);
-      // console.log(jsonObject);
-      console.log("ubbmited to tester");
+      // console.log("ubbmited to tester");
       const resultMessage = await test(jsonObject);
 
       const redispipeline = redis.pipeline();

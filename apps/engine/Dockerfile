@@ -27,11 +27,13 @@ COPY --from=installer /app/ .
 ARG DATABASE_URL
 RUN DATABASE_URL=$DATABASE_URL bun run build --filter=engine
 
-FROM node:20.10.0-alpine AS final
+# FROM node:20.10.0-alpine AS final
+FROM base AS final
 RUN apk add libstdc++
 WORKDIR /app
 COPY --from=builder /app/apps/engine/dist/ ./apps/engine/dist/
 COPY --from=builder /app/apps/engine/node_modules ./apps/engine/node_modules
 COPY --from=builder /app/node_modules ./node_modules
 COPY --from=builder /app/apps/engine/package.json ./apps/engine/package.json
-CMD ["node","./apps/engine/dist/index.js"]
+WORKDIR /app/apps/engine
+CMD ["bun","run","./dist/index.js"]

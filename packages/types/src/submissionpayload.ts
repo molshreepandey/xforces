@@ -4,6 +4,6 @@ export type SubmissionPayload= {
   problemid: number,
   input: string,
   output: string,
-  timelimit: string,
+  timelimit: number,
   memory: string
 }

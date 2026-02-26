@@ -26,7 +26,7 @@ export default function editorpage({
     let attempts = 0;
 
     while (attempts < MAX_ATTEMPTS) {
-      await new Promise((resolve) => setTimeout(resolve, 1000));
+      await new Promise((resolve) => setTimeout(resolve, 500));
       attempts++;
 
       try {
@@ -38,7 +38,7 @@ export default function editorpage({
           return;
         }
 
-        setResult(`Judging... (${attempts}s)`);
+        setResult(`Judging... (${attempts/2}s)`);
       } catch {
         setResult("Error checking status. Please try again.");
         setSubmitting(false);
@@ -86,7 +86,7 @@ export default function editorpage({
                 userId: userid,
                 problemid: codeEditorParam.content.problemid,
                 memory: "512",
-                timelimit: "1000",
+                timelimit: 1000,
                 input: codeEditorParam.content.input,
                 output: codeEditorParam.content.output,
               });
