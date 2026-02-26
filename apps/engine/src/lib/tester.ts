@@ -17,7 +17,6 @@ export default async function test(
     userid: payload.userId,
     message: "",
   };
-  // console.log(payload);
   try {
     const inputBase64 = Buffer.from(payload.input || "").toString("base64");
     const codeBase64 = Buffer.from(payload.code).toString("base64");

@@ -16,7 +16,6 @@ export default function editorpage({
   codeEditorParam: Omit<CodeEditorSchema, "editorRef">;
   userid: string;
 }) {
-  // console.log(codeEditorParam);
   const editorRef = useRef<any>(null);
   const [submitting, setSubmitting] = useState(false);
   const [result, setResult] = useState<string | null>(null);
