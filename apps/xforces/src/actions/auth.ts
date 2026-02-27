@@ -4,7 +4,7 @@ import { signIn, signOut } from "@/lib/auth";
 import { AuthError } from "next-auth";
 import { redirect } from "next/navigation";
 import argon2 from "argon2";
-import { prisma , Prisma} from "@repo/db";
+import { prisma, Prisma } from "@repo/db";
 import { SignupSchema } from "@/lib/validator/login";
 
 export const SignupUser = async (credentials: FormData): Promise<void> => {
