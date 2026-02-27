@@ -30,13 +30,21 @@ FROM oven/bun:alpine AS final
 WORKDIR /app
 ENV NODE_ENV=production
 ENV NEXT_TELEMETRY_DISABLED=1
-COPY --from=build /app/node_modules ./node_modules
-COPY --from=build /app/apps/xforces/node_modules ./apps/xforces/node_modules
-COPY --from=build /app/apps/xforces/.next ./apps/xforces/.next
+ENV HOSTNAME="0.0.0.0" 
+ENV PORT=3000
+COPY --from=build /app/apps/xforces/.next/standalone ./
 COPY --from=build /app/apps/xforces/public ./apps/xforces/public
-COPY --from=build /app/apps/xforces/package.json ./apps/xforces/package.json
-COPY --from=build /app/apps/xforces/next.config.ts ./apps/xforces/next.config.ts
-WORKDIR /app/apps/xforces
+COPY --from=build /app/apps/xforces/.next/static ./apps/xforces/.next/static
 EXPOSE 3000
+CMD ["bun", "apps/xforces/server.js"]
 
-CMD ["bun", "start"]
+# COPY --from=build /app/node_modules ./node_modules
+# COPY --from=build /app/apps/xforces/node_modules ./apps/xforces/node_modules
+# COPY --from=build /app/apps/xforces/.next ./apps/xforces/.next
+# COPY --from=build /app/apps/xforces/public ./apps/xforces/public
+# COPY --from=build /app/apps/xforces/package.json ./apps/xforces/package.json
+# COPY --from=build /app/apps/xforces/next.config.ts ./apps/xforces/next.config.ts
+# WORKDIR /app/apps/xforces
+# EXPOSE 3000
+
+# CMD ["bun", "start"]
