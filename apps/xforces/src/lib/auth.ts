@@ -87,11 +87,9 @@ const AuthConfig: NextAuthConfig = {
         });
         if (!user) {
           return null;
-          // throw new Error("Invalid credentials");
         }
         if (!user.password) {
           return null;
-          // throw new Error("Reset the Pasword");
         }
         try {
           const isValidPassword = await argon2.verify(
@@ -100,11 +98,9 @@ const AuthConfig: NextAuthConfig = {
           );
           if (!isValidPassword) {
             return null;
-            // throw new Error("invclaid password");
           }
         } catch (err) {
           return null;
-          // throw new Error("Invalid password");
         }
         return user;
       },
@@ -126,9 +122,6 @@ const AuthConfig: NextAuthConfig = {
     },
     async jwt({ token, user, trigger }) {
       if (user && (trigger == "signIn" || trigger == "signUp")) {
-        // console.log("jwy");
-        // console.log(user);
-        // console.log(trigger);
         const newVerison = uuid();
         await prisma.user.update({
           where: {
@@ -138,11 +131,9 @@ const AuthConfig: NextAuthConfig = {
             tokenVersion: newVerison,
           },
         });
-        
+
         token.id = user?.id;
         token.tokenVersion = newVerison;
-        // console.log("token in first signin");
-        // console.log(token);
         return token;
       }
       if (!token.id) {
@@ -166,10 +157,6 @@ const AuthConfig: NextAuthConfig = {
       if (!token.tokenVersion || !token.id) {
         return null as any;
       }
-      // console.log("session");
-      // console.log(session);
-      // console.log("token");
-      // console.log(token);
       session.user.id = token.id as string;
       return session;
     },

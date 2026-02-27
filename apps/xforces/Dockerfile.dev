@@ -1,6 +1,6 @@
 FROM oven/bun:alpine AS base
 WORKDIR /app
-
+RUN apk add --no-cache build-base python3
 COPY . .
 RUN rm -rf /app/apps/engine
 RUN bun install
