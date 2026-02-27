@@ -9,7 +9,8 @@ const MAX_OUTPUT_SIZE = 100 * 1024;
 
 export default async function test(
   payload: SubmissionPayload,
-): Promise<string> {
+  taskid: string,
+): Promise<void> {
   let container: Dockerode.Container | undefined;
   let stream: NodeJS.ReadWriteStream | undefined;
   let timerId: NodeJS.Timeout | undefined;
@@ -98,15 +99,22 @@ export default async function test(
       finaloutput = { userid: payload.userId, message: "failed" };
     }
   } catch (err: any) {
-    if(err.message === "TLE"){
-    finaloutput = { userid: payload.userId, message: "Time Limit exceeded" };
-    }else{
-    finaloutput = { userid: payload.userId, message: "Execution Error" };
+    if (err.message === "TLE") {
+      finaloutput = { userid: payload.userId, message: "Time Limit exceeded" };
+    } else {
+      finaloutput = { userid: payload.userId, message: "Execution Error" };
     }
   } finally {
     if (container) {
       await container.remove({ force: true });
     }
+    const redispipeline = redis.pipeline();
+    redispipeline.hset(`status:${taskid}`, {
+      state: "completed",
+      remark: finaloutput.message,
+    });
+    // redispipeline.expire(`status:${taskid}`, 300);
+    await redispipeline.exec();
     await prisma.submission.create({
       data: {
         userId: payload.userId,
@@ -115,6 +123,6 @@ export default async function test(
         remark: finaloutput.message,
       },
     });
-    return finaloutput?.message || "unknown";
+    return;
   }
 }

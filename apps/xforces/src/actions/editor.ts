@@ -14,12 +14,13 @@ export const SubmitCode = async (submission: SubmissionPayload) => {
     "timelimit", JSON.stringify(submission.timelimit),
     "memory", JSON.stringify(submission.memory)
   );
-
-  await redis.hset(`status:${taskId}`, {
+  const redispipeline = redis.pipeline();
+  redispipeline.hset(`status:${taskId}`, {
     state: "queued",
     result: {}
   });
-
+  redispipeline.expire(`status:${taskId}`, 300);
+  await redispipeline.exec();
   return { taskId };
 }
 
