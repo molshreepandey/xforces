@@ -1,7 +1,6 @@
 import {prisma} from "../src/index";
 
 async function main() {
-  console.log('Start seeding...');
 
   await prisma.questions.deleteMany();
 
@@ -196,7 +195,6 @@ async function main() {
     console.log(`Created question with id: ${question.id}`);
   }
 
-  console.log('Seeding finished.');
 }
 
 main()
