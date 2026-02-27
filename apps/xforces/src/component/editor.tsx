@@ -9,7 +9,7 @@ const MonacoEditor = dynamic(() => import("@/lib/editor/editor"), {
   ssr: false,
 });
 
-export default function editorpage({
+export default function Editorpage({
   codeEditorParam,
   userid,
 }: {
@@ -21,7 +21,7 @@ export default function editorpage({
   const [result, setResult] = useState<string | null>(null);
 
   const pollForResult = async (taskId: string) => {
-    const MAX_ATTEMPTS = 60; 
+    const MAX_ATTEMPTS = 30; 
     let attempts = 0;
 
     while (attempts < MAX_ATTEMPTS) {
