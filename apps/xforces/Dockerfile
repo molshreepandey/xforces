@@ -28,7 +28,7 @@ RUN bun install --production --frozen-lockfile
 
 FROM oven/bun:alpine AS final
 WORKDIR /app
-ENV NODE_ENV=production
+# ENV NODE_ENV=production
 ENV NEXT_TELEMETRY_DISABLED=1
 COPY --from=build /app/node_modules ./node_modules
 COPY --from=build /app/apps/xforces/node_modules ./apps/xforces/node_modules
