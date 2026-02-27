@@ -2,7 +2,7 @@ FROM oven/bun:alpine AS base
 
 FROM base AS optimizer
 WORKDIR /app
-RUN bun add -g  turbo
+RUN bun add -g turbo
 
 FROM optimizer AS manager
 WORKDIR /app
@@ -11,19 +11,25 @@ RUN turbo prune xforces --docker
 
 FROM base AS installer
 WORKDIR /app
-COPY --from=manager /app/out/full/ .
+COPY --from=manager /app/out/json/ .
 COPY --from=manager /app/out/bun.lock* .
+COPY --from=manager /app/turbo.json ./
 RUN bun install
+COPY --from=manager /app/out/full/ .
 
 FROM base AS build
 WORKDIR /app
 COPY --from=installer /app/ ./
 ARG DATABASE_URL
+ENV NEXT_TELEMETRY_DISABLED=1
 RUN DATABASE_URL=$DATABASE_URL bun run build --filter=xforces
-
+RUN rm -rf node_modules apps/xforces/node_modules
+RUN bun install --production --frozen-lockfile
 
 FROM oven/bun:alpine AS final
 WORKDIR /app
+ENV NODE_ENV=production
+ENV NEXT_TELEMETRY_DISABLED=1
 COPY --from=build /app/node_modules ./node_modules
 COPY --from=build /app/apps/xforces/node_modules ./apps/xforces/node_modules
 COPY --from=build /app/apps/xforces/.next ./apps/xforces/.next
@@ -32,4 +38,5 @@ COPY --from=build /app/apps/xforces/package.json ./apps/xforces/package.json
 COPY --from=build /app/apps/xforces/next.config.ts ./apps/xforces/next.config.ts
 WORKDIR /app/apps/xforces
 EXPOSE 3000
+
 CMD ["bun", "start"]
