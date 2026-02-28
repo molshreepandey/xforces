@@ -1,7 +1,6 @@
 import NextAuth, { CredentialsSignin, NextAuthConfig } from "next-auth";
 import Google from "next-auth/providers/google";
 import Credentials from "next-auth/providers/credentials";
-import argon2 from "argon2";
 import { PrismaAdapter } from "@auth/prisma-adapter";
 import { prisma } from "@repo/db";
 import { v4 as uuid } from "uuid";
@@ -92,7 +91,7 @@ const AuthConfig: NextAuthConfig = {
           return null;
         }
         try {
-          const isValidPassword = await argon2.verify(
+          const isValidPassword = await Bun.password.verify(
             user.password as string,
             userCredentials.data.password,
           );
