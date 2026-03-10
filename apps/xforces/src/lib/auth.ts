@@ -72,7 +72,7 @@ const AuthConfig: NextAuthConfig = {
         if (!userCredentials.success) {
           throw new Error("Invalid credentials parsign failed");
         }
-        let user = await prisma.user.findFirst({
+        const user = await prisma.user.findFirst({
           where: {
             email: userCredentials.data.email,
           },
@@ -84,6 +84,7 @@ const AuthConfig: NextAuthConfig = {
             tokenVersion: true,
           },
         });
+        console.log(user);
         if (!user) {
           return null;
         }
@@ -92,14 +93,14 @@ const AuthConfig: NextAuthConfig = {
         }
         try {
           const isValidPassword = await Bun.password.verify(
-            user.password as string,
             userCredentials.data.password,
+            user.password as string,
           );
           if (!isValidPassword) {
             return null;
           }
-        } catch (err) {
-          return null;
+        } catch (err: any) {          
+          return err.message || null ;
         }
         return user;
       },
