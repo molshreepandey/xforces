@@ -1,12 +1,11 @@
-model Questions {
+model Problems {
 id          Int       @id() @default(autoincrement())
 title       String
-content     String
-headercode  String
-code        String
-maincode    String
-input       String
-output      String
+statement   String
+testcases   TestCase[]
+timelimit   Int
+memorylimit Int
 createdAt   DateTime  @default(now())
 submissions Submission[]
+codes       ProblemCode[]
 }

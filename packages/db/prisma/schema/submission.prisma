@@ -6,5 +6,5 @@ model Submission {
   remark      String
   submitedAt  DateTime   @default(now())
   user        User       @relation(fields: [userId], references: [id], onDelete: Cascade)
-  questions   Questions  @relation(fields: [problemid], references: [id], onDelete: Cascade)
+  problems     Problems @relation(fields: [problemid], references: [id], onDelete: Cascade)
 }
