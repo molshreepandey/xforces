@@ -1,27 +1,62 @@
 "use server"
-import redis from "@/lib/redis";
+// import { auth } from "@/lib/auth";
+// import redis from "@/lib/redis";
+import { GetBoilerplateSchema, TestRequestResponse } from "@/types/editor";
+import { prisma } from "@repo/db";
 import { SubmissionPayload } from "@repo/types";
+// import { headers } from "next/headers";
+// import { redirect } from "next/navigation";
+
+
+export const GetBoilerplate = async (problem: GetBoilerplateSchema)=>{
+  console.log("getting boilerpalte: ", problem);
+  const questioncontent = await prisma.problemCode.findFirst({
+    where:{id: problem.problemid , language: problem.language},
+    select:{
+      classcode: true
+    }
+  });
+  return questioncontent?.classcode ?? "";
+}
 
 export const SubmitCode = async (submission: SubmissionPayload) => {
-  // console.log("redis submistion started");
-  const taskId = await redis.xadd(
-    "tasks", "*",
-    "userId", JSON.stringify(submission.userId),
-    "problemid", JSON.stringify(submission.problemid),
-    "code", JSON.stringify(submission.code),
-    "input", JSON.stringify(submission.input),
-    "output", JSON.stringify(submission.output),
-    "timelimit", JSON.stringify(submission.timelimit),
-    "memory", JSON.stringify(submission.memory)
-  );
-  const redispipeline = redis.pipeline();
-  redispipeline.hset(`status:${taskId}`, {
-    state: "queued",
-    result: {}
+// const user= await auth();
+  // if(!user?.user?.id) return { taskId: null };
+  const questioncontent = await prisma.problems.findFirst({
+    where:{id: submission.problemid},
+    select:{
+      memorylimit: true,
+      timelimit: true,
+      testcases: true,
+    }
   });
-  redispipeline.expire(`status:${taskId}`, 300);
-  await redispipeline.exec();
-  return { taskId };
+  const header = new Headers();
+  header.append("x-user-id", submission.userId);
+  header.append("Content-Type", "application/json");
+  console.log("user");
+  // console.log(user);
+  // console.log(user?.user?.id);
+  console.log("reuest header");
+  console.log(header);
+  console.log("submission");
+  console.log(submission);
+  const response = await fetch(`${process.env.IRONJUDGE_URL}/run`, {
+    method: "POST",
+    headers: header,
+    body: JSON.stringify(submission),
+  });
+  
+  
+  if(!response.ok){
+    const requesterror = await response.text();
+    console.log(requesterror);
+    return {taskId: null};
+  }
+  console.log(response);
+  const result: TestRequestResponse = await response.json();
+  console.log(result);
+  return { taskId: result.submissionid };
+
 }
 
 

@@ -1,9 +1,9 @@
 "use client";
-import { SubmitCode } from "@/actions/editor";
+import { GetBoilerplate, SubmitCode } from "@/actions/editor";
 import { PollSubmissionStatus } from "@/actions/pollStatus";
-import { CodeEditorSchema } from "@/lib/editor/editor";
+import { CodeEditorSchema, EditorLang } from "@/types/editor";
 import dynamic from "next/dynamic";
-import { useRef, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 
 const MonacoEditor = dynamic(() => import("@/lib/editor/editor"), {
   ssr: false,
@@ -13,15 +13,22 @@ export default function Editorpage({
   codeEditorParam,
   userid,
 }: {
-  codeEditorParam: Omit<CodeEditorSchema, "editorRef">;
+  codeEditorParam: CodeEditorSchema;
   userid: string;
 }) {
   const editorRef = useRef<any>(null);
+  const [lang, setLang] = useState<EditorLang>(EditorLang.cpp);
   const [submitting, setSubmitting] = useState(false);
   const [result, setResult] = useState<string | null>(null);
+  const [boilerplate, setBoilerplate] = useState<string>(
+    "//write you code here",
+  );
 
+  const handleLangChange = (event: React.ChangeEvent<HTMLSelectElement>) => {
+    setLang(event.target.value as EditorLang);
+  };
   const pollForResult = async (taskId: string) => {
-    const MAX_ATTEMPTS = 30; 
+    const MAX_ATTEMPTS = 30;
     let attempts = 0;
 
     while (attempts < MAX_ATTEMPTS) {
@@ -37,7 +44,7 @@ export default function Editorpage({
           return;
         }
 
-        setResult(`Judging... (${attempts/2}s)`);
+        setResult(`Judging... (${attempts / 2}s)`);
       } catch {
         setResult("Error checking status. Please try again.");
         setSubmitting(false);
@@ -48,6 +55,21 @@ export default function Editorpage({
     setSubmitting(false);
   };
 
+  useEffect(() => {
+    const fetchBoilerplate = async () => {
+      const boilerplate = await GetBoilerplate({
+        problemid: codeEditorParam.content.problemid,
+        language: lang,
+      });
+      console.log(boilerplate);
+      setBoilerplate(boilerplate);
+      if (editorRef.current) {
+        editorRef.current.setValue(boilerplate);
+      }
+    };
+    fetchBoilerplate();
+  }, [lang]);
+
   return (
     <div className="flex flex-col h-full">
       {/* Editor toolbar */}
@@ -55,24 +77,27 @@ export default function Editorpage({
         <span className="text-xs font-medium text-text-muted uppercase tracking-wide">
           Code Editor
         </span>
-        <span className="text-xs text-text-muted">
-          {codeEditorParam.language.toUpperCase()}
-        </span>
+        <select id="langauge-select" value={lang} onChange={handleLangChange}>
+          {Object.values(EditorLang).map((l) => (
+            <option key={l} value={l}>
+              {l.toLowerCase()}
+            </option>
+          ))}
+        </select>
+        {/*<span className="text-xs text-text-muted">{lang}</span>*/}
       </div>
 
       <div className="h-3/4 min-h-0">
         <MonacoEditor
-          content={codeEditorParam.content}
+          content={boilerplate}
           editorRef={editorRef}
-          language={codeEditorParam.language}
+          language={lang}
         />
       </div>
 
       {/* Submit bar */}
       <div className="flex items-center justify-between px-4 py-3 bg-surface border-t border-border shrink-0">
-        {result && (
-          <span className="text-xs text-text-muted">{result}</span>
-        )}
+        {result && <span className="text-xs text-text-muted">{result}</span>}
         {!result && <span></span>}
         <button
           disabled={submitting}
@@ -81,13 +106,9 @@ export default function Editorpage({
             setResult(null);
             try {
               const id = await SubmitCode({
-                code: `${codeEditorParam.content.header+"\n"+ editorRef.current.getValue() as string +"\n"+ codeEditorParam.content.main}`,
+                code: editorRef.current.getValue(),
                 userId: userid,
                 problemid: codeEditorParam.content.problemid,
-                memory: "512",
-                timelimit: 1000,
-                input: codeEditorParam.content.input,
-                output: codeEditorParam.content.output,
               });
               setResult(`Submitted! Judging...`);
               pollForResult(id.taskId as string);
