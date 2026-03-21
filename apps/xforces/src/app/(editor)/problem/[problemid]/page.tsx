@@ -50,10 +50,8 @@ export default async function ProblemPage({
             codeEditorParam={{
               content: {
                 problemid: problem.id,
-              },
-              language: EditorLang.cpp,
+              }
             }}
-            userid={user?.user?.id as string}
           />
         </div>
       </div>
