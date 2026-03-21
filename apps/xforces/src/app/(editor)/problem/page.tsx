@@ -13,7 +13,7 @@ export default async function Problems({
   const currentPage = Number(page) || 1;
   const pageSize = 50;
   const [problems, problemCount] = await Promise.all([
-    prisma.questions.findMany({
+    prisma.problems .findMany({
       select: {
         id: true,
         title: true,
@@ -24,7 +24,7 @@ export default async function Problems({
       take: pageSize,
       skip: (currentPage - 1) * pageSize,
     }),
-    prisma.questions.count(),
+    prisma.problems.count(),
   ]);
   const totalPages = Math.ceil(problemCount / pageSize);
   const visiblePages = getVisiblePages(problemCount, totalPages);
@@ -45,7 +45,7 @@ export default async function Problems({
               </tr>
             </thead>
             <tbody>
-              {problems.map((problem, idx) => (
+              {problems.map((problem) => (
                 <tr
                   key={problem.id}
                   className="border-b border-border last:border-b-0 hover:bg-surface-hover transition-colors"
