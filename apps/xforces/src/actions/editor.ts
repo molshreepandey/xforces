@@ -1,11 +1,8 @@
 "use server"
-// import { auth } from "@/lib/auth";
-// import redis from "@/lib/redis";
-import { GetBoilerplateSchema, TestRequestResponse } from "@/types/editor";
+import { auth } from "@/lib/auth";
+import { GetBoilerplateSchema, SubmissionPayload, TaskPayload, TestRequestResponse, TestCases } from "@/types/editor";
 import { prisma } from "@repo/db";
-import { SubmissionPayload } from "@repo/types";
-// import { headers } from "next/headers";
-// import { redirect } from "next/navigation";
+import { redirect } from "next/navigation";
 
 
 export const GetBoilerplate = async (problem: GetBoilerplateSchema)=>{
@@ -19,31 +16,84 @@ export const GetBoilerplate = async (problem: GetBoilerplateSchema)=>{
   return questioncontent?.classcode ?? "";
 }
 
+export const PollSubmissionStatus = async (taskId: string)=>{
+  const user= await auth();
+  if(!user?.user?.id) {return  redirect('/signin')};
+  const header = new Headers();
+  header.append("x-user-id", user.user.id);
+  header.append("Content-Type", "application/json");
+  const pollstatus= await fetch(`${process.env.IRONJUDGE_URL}/status/${taskId}`, {
+     method: "GET",
+     headers: header
+   });
+  const result = await pollstatus.json();
+  console.log("result:",result);
+  return result;
+}
+
+
 export const SubmitCode = async (submission: SubmissionPayload) => {
-// const user= await auth();
-  // if(!user?.user?.id) return { taskId: null };
+const user= await auth();
+  if(!user?.user?.id) return { taskId: null };
   const questioncontent = await prisma.problems.findFirst({
     where:{id: submission.problemid},
     select:{
       memorylimit: true,
       timelimit: true,
-      testcases: true,
+      testcases: {
+        select:{
+          input: true,
+          output: true,
+        }
+      },
     }
   });
+  
+  const finalPayload: Omit<TaskPayload, "code" | "language"> = {
+    timelimit: questioncontent?.timelimit ?? 1000,
+    memorylimit: questioncontent?.memorylimit ?? 128,
+    testcases: questioncontent?.testcases.map((tc,idx) => ({
+      id: idx+1,
+      input: tc.input,
+      output: tc.output,
+    })),
+  }
+  
+  console.log("final paylaod", finalPayload);
+  
+  const main = await prisma.problemCode.findFirst({
+    where:{ problemId: submission.problemid, language: submission.language},
+    select:{
+      maincode: true,
+    }
+  });
+  
+  const finalcodepaylaod = main?.maincode.replace("{{classcode}}", submission.code);
   const header = new Headers();
-  header.append("x-user-id", submission.userId);
+  header.append("x-user-id", user.user.id);
   header.append("Content-Type", "application/json");
-  console.log("user");
-  // console.log(user);
-  // console.log(user?.user?.id);
-  console.log("reuest header");
-  console.log(header);
-  console.log("submission");
-  console.log(submission);
-  const response = await fetch(`${process.env.IRONJUDGE_URL}/run`, {
+  
+  console.log("final code", finalcodepaylaod);
+  console.log("submission", submission);
+  
+  
+  const Payload : TaskPayload = {
+    code: finalcodepaylaod,
+    testcases: finalPayload.testcases,
+    timelimit: finalPayload.timelimit,
+    memorylimit: finalPayload.memorylimit,
+    language: submission.language,
+  }
+  
+  
+  console.log("payload", Payload);
+  
+  
+  
+  const response = await fetch(`${process.env.IRONJUDGE_URL}/test`, {
     method: "POST",
     headers: header,
-    body: JSON.stringify(submission),
+    body: JSON.stringify(Payload),
   });
   
   

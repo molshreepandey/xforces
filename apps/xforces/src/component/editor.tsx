@@ -1,6 +1,6 @@
 "use client";
-import { GetBoilerplate, SubmitCode } from "@/actions/editor";
-import { PollSubmissionStatus } from "@/actions/pollStatus";
+import { GetBoilerplate, PollSubmissionStatus, SubmitCode } from "@/actions/editor";
+// import { PollSubmissionStatus } from "@/actions/pollStatus";
 import { CodeEditorSchema, EditorLang } from "@/types/editor";
 import dynamic from "next/dynamic";
 import { useEffect, useRef, useState } from "react";
@@ -11,10 +11,8 @@ const MonacoEditor = dynamic(() => import("@/lib/editor/editor"), {
 
 export default function Editorpage({
   codeEditorParam,
-  userid,
 }: {
   codeEditorParam: CodeEditorSchema;
-  userid: string;
 }) {
   const editorRef = useRef<any>(null);
   const [lang, setLang] = useState<EditorLang>(EditorLang.cpp);
@@ -28,23 +26,28 @@ export default function Editorpage({
     setLang(event.target.value as EditorLang);
   };
   const pollForResult = async (taskId: string) => {
+    
+    console.log("Start polling for submissionid: ", taskId);
     const MAX_ATTEMPTS = 30;
     let attempts = 0;
 
     while (attempts < MAX_ATTEMPTS) {
-      await new Promise((resolve) => setTimeout(resolve, 500));
+      await new Promise((resolve) => setTimeout(resolve, 1000));
       attempts++;
 
       try {
         const status = await PollSubmissionStatus(taskId);
 
-        if (status && status.state === "completed") {
-          setResult(`Result: ${status.remark}`);
+        if (status && status.status === "completed") {
+          setResult(`Result: ${status.message}`);
           setSubmitting(false);
           return;
         }
-
+        if (status && status.status === "processing"){
+        setResult(`${status.status}...`);
+        }else{
         setResult(`Judging... (${attempts / 2}s)`);
+        }
       } catch {
         setResult("Error checking status. Please try again.");
         setSubmitting(false);
@@ -106,8 +109,8 @@ export default function Editorpage({
             setResult(null);
             try {
               const id = await SubmitCode({
+                language: lang,
                 code: editorRef.current.getValue(),
-                userId: userid,
                 problemid: codeEditorParam.content.problemid,
               });
               setResult(`Submitted! Judging...`);
