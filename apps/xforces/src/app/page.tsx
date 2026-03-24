@@ -10,7 +10,8 @@ export default async function Home() {
           X<span className="text-accent">Forces</span>
         </h1>
         <p className="text-text-muted text-lg mb-8 text-center max-w-md">
-          Sharpen your coding skills. Solve problems, write code, and get better every day.
+          Sharpen your coding skills. Solve problems, write code, and get better
+          every day.
         </p>
         <Link
           href="/problem"

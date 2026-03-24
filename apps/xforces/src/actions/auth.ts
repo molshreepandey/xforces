@@ -23,7 +23,9 @@ export const SignupUser = async (credentials: FormData): Promise<void> => {
     return redirect("/auth-error?error=passwordmismatch");
   }
   try {
-    const pwHash = await Bun.password.hash(parsedCredentials.data.password as string);
+    const pwHash = await Bun.password.hash(
+      parsedCredentials.data.password as string,
+    );
     await prisma.user.create({
       data: {
         name: parsedCredentials.data.name,

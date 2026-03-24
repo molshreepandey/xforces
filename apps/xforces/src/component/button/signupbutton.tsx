@@ -17,11 +17,7 @@ export function SubmitButton({
     ? className
     : `w-full py-2.5 bg-accent text-background font-semibold rounded-lg hover:bg-accent-hover transition-colors text-sm cursor-pointer disabled:opacity-70 disabled:cursor-not-allowed`;
   return (
-    <button
-      className={style}
-      type="submit"
-      disabled={pending}
-    >
+    <button className={style} type="submit" disabled={pending}>
       {pending ? loading : content}
     </button>
   );

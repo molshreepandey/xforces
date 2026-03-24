@@ -1,6 +1,6 @@
 // "use client";
 import Editor, { OnChange, Monaco } from "@monaco-editor/react";
-import type { CodeSchema  } from "@/types/editor";
+import type { CodeSchema } from "@/types/editor";
 
 export default function CodeEditor({
   language,
@@ -31,7 +31,7 @@ export default function CodeEditor({
           scrollBeyondLastLine: false,
           readOnly: false,
           automaticLayout: true,
-          tabCompletion: "on"
+          tabCompletion: "on",
         }}
       />
     </div>

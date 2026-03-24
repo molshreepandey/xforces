@@ -33,7 +33,7 @@ export default async function signin() {
             placeholder="Password"
             name="password"
           />
-          <SubmitButton content="SignIn" loading="Signing...."/>
+          <SubmitButton content="SignIn" loading="Signing...." />
           {/*<button
             className="w-full py-2.5 bg-accent text-background font-semibold rounded-lg hover:bg-accent-hover transition-colors text-sm cursor-pointer"
             type="submit"
@@ -44,7 +44,10 @@ export default async function signin() {
 
         <p className="text-center text-text-muted text-sm mt-6">
           Don&apos;t have an account?{" "}
-          <Link href="/signup" className="text-accent hover:text-accent-hover transition-colors">
+          <Link
+            href="/signup"
+            className="text-accent hover:text-accent-hover transition-colors"
+          >
             Sign Up
           </Link>
         </p>

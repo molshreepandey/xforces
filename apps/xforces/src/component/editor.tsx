@@ -1,5 +1,9 @@
 "use client";
-import { GetBoilerplate, PollSubmissionStatus, SubmitCode } from "@/actions/editor";
+import {
+  GetBoilerplate,
+  PollSubmissionStatus,
+  SubmitCode,
+} from "@/actions/editor";
 // import { PollSubmissionStatus } from "@/actions/pollStatus";
 import { CodeEditorSchema, EditorLang } from "@/types/editor";
 import dynamic from "next/dynamic";
@@ -27,7 +31,6 @@ export default function Editorpage({
     setLang(event.target.value as EditorLang);
   };
   const pollForResult = async (taskId: string) => {
-    
     console.log("Start polling for submissionid: ", taskId);
     const MAX_ATTEMPTS = 30;
     let attempts = 0;
@@ -44,10 +47,10 @@ export default function Editorpage({
           setSubmitting(false);
           return;
         }
-        if (status && status.status === "processing"){
-        setResult(`${status.status}...`);
-        }else{
-        setResult(`Judging... (${attempts / 2}s)`);
+        if (status && status.status === "processing") {
+          setResult(`${status.status}...`);
+        } else {
+          setResult(`Judging... (${attempts / 2}s)`);
         }
       } catch {
         setResult("Error checking status. Please try again.");

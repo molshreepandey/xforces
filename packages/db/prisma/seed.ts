@@ -365,9 +365,9 @@ async function main() {
     "    def combinationSum(self, candidates, target):",
     "        results = []",
     "        self.backtrack(candidates, target, [], 0, results)",
-    "        return results"
+    "        return results",
   ].join("\n");
-  
+
   const pyMainCode = [
     "import sys",
     "import os",
@@ -403,7 +403,7 @@ async function main() {
     "        os.write(3, final_output.encode())",
     "",
     "if __name__ == '__main__':",
-    "    main()"
+    "    main()",
   ].join("\n");
 
   const testcases = [

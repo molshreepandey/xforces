@@ -14,7 +14,8 @@ const geistMono = Geist_Mono({
 
 export const metadata: Metadata = {
   title: "XForces — Practice Coding Problems",
-  description: "Sharpen your coding skills with XForces. Solve problems, submit code, and improve.",
+  description:
+    "Sharpen your coding skills with XForces. Solve problems, submit code, and improve.",
 };
 
 export default function RootLayout({

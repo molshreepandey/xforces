@@ -40,7 +40,13 @@ export default async function Navbar() {
                 await signOut();
               }}
             >
-              <SubmitButton className={"px-4 py-1.5 text-sm rounded-md border border-border text-text-muted hover:text-text hover:border-text-muted transition-colors cursor-pointer"} content="Sign Out" loading="Signing Out..."/>
+              <SubmitButton
+                className={
+                  "px-4 py-1.5 text-sm rounded-md border border-border text-text-muted hover:text-text hover:border-text-muted transition-colors cursor-pointer"
+                }
+                content="Sign Out"
+                loading="Signing Out..."
+              />
               {/*<button
                 type="submit"
                 className="px-4 py-1.5 text-sm rounded-md border border-border text-text-muted hover:text-text hover:border-text-muted transition-colors cursor-pointer"
@@ -57,7 +63,7 @@ export default async function Navbar() {
               await signIn();
             }}
           >
-            <SubmitButton content="Sign In" loading="Signing..."/>
+            <SubmitButton content="Sign In" loading="Signing..." />
             {/*<button
               type="submit"
               className="px-4 py-1.5 text-sm rounded-md bg-accent text-background font-medium hover:bg-accent-hover transition-colors cursor-pointer"
