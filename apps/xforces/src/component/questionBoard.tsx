@@ -1,22 +1,19 @@
-
-import ReactMarkdown from 'react-markdown'
+import ReactMarkdown from "react-markdown";
 
 export interface QuestionBoardSchema {
-  question: string
+  question: string;
 }
 
 export default function QuestionBoard({ question }: QuestionBoardSchema) {
   const dedented = question
-    .split('\n')
-    .map(line => line.replace(/^      /, '')) 
-    .join('\n')
+    .split("\n")
+    .map((line) => line.replace(/^      /, ""))
+    .join("\n")
     .trim();
 
   return (
     <div className="markdown-content">
-      <ReactMarkdown>
-        {dedented}
-      </ReactMarkdown>
+      <ReactMarkdown>{dedented}</ReactMarkdown>
     </div>
-  )
+  );
 }

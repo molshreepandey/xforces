@@ -99,8 +99,8 @@ const AuthConfig: NextAuthConfig = {
           if (!isValidPassword) {
             return null;
           }
-        } catch (err: any) {          
-          return err.message || null ;
+        } catch (err: any) {
+          return err.message || null;
         }
         return user;
       },

@@ -50,7 +50,7 @@ export default async function ProblemPage({
             codeEditorParam={{
               content: {
                 problemid: problem.id,
-              }
+              },
             }}
           />
         </div>

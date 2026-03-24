@@ -7,7 +7,6 @@
 //   "memory", string
 // ];
 
-
 // export type redisJson = {
 //   userId: string,
 //   code: string,
@@ -17,11 +16,9 @@
 //   memory: string
 // }
 
-
 // export type RedisStreamEntry = [string, RedisStreamFields];
 
-
 // export type RedisStreamPayload = [
-//   string, 
+//   string,
 //   RedisStreamEntry[]
 // ][];

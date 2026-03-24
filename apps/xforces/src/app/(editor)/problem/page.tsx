@@ -13,7 +13,7 @@ export default async function Problems({
   const currentPage = Number(page) || 1;
   const pageSize = 50;
   const [problems, problemCount] = await Promise.all([
-    prisma.problems .findMany({
+    prisma.problems.findMany({
       select: {
         id: true,
         title: true,

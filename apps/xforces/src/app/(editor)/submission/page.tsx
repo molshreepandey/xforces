@@ -71,7 +71,9 @@ export default async function SubmissionPage({
                   key={entry.id}
                   className="border-b border-border last:border-b-0 hover:bg-surface-hover transition-colors"
                 >
-                  <th className="px-4 py-3 text-text-muted">{((currentpage-1) * pageSize) + idx + 1}</th>
+                  <th className="px-4 py-3 text-text-muted">
+                    {(currentpage - 1) * pageSize + idx + 1}
+                  </th>
                   <td className="px-4 py-3 text-text-muted">
                     {entry.problemid}
                   </td>
@@ -110,7 +112,11 @@ export default async function SubmissionPage({
           </table>
         </div>
       </div>
-      <PageIndex currentpage={currentpage} totalPages={totalPages} visiblePages={visiblePages}/>
+      <PageIndex
+        currentpage={currentpage}
+        totalPages={totalPages}
+        visiblePages={visiblePages}
+      />
     </div>
   );
 }

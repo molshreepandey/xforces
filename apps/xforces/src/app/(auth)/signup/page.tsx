@@ -8,10 +8,7 @@ export default async function signupPage() {
       <div className="w-full max-w-sm bg-surface rounded-xl border border-border p-8">
         <h1 className="text-2xl font-bold text-center mb-6">Create Account</h1>
 
-        <form
-          action={SignupUser}
-          className="flex flex-col gap-4"
-        >
+        <form action={SignupUser} className="flex flex-col gap-4">
           <input
             className="w-full px-3 py-2.5 bg-background border border-border rounded-lg text-text placeholder-text-muted text-sm focus:outline-none focus:border-accent transition-colors"
             type="text"
@@ -36,12 +33,15 @@ export default async function signupPage() {
             name="confirmpassword"
             placeholder="Enter Password again"
           />
-          <SubmitButton content="SignUp" loading="Signing Up..."/>
+          <SubmitButton content="SignUp" loading="Signing Up..." />
         </form>
 
         <p className="text-center text-text-muted text-sm mt-6">
           Already have an account?{" "}
-          <Link href="/signin" className="text-accent hover:text-accent-hover transition-colors">
+          <Link
+            href="/signin"
+            className="text-accent hover:text-accent-hover transition-colors"
+          >
             Sign In
           </Link>
         </p>

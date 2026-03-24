@@ -1,4 +1,4 @@
-"use client"
+"use client";
 
 import { useState } from "react";
 import { signIn, signOut } from "next-auth/react";
@@ -13,7 +13,7 @@ export default function SignInGoogle() {
       await signIn("google", { redirectTo: "/" });
     } catch (error) {
       console.error("Failed to sign in with Google", error);
-      setIsLoading(false); 
+      setIsLoading(false);
     }
   };
 
@@ -67,7 +67,7 @@ export default function SignInGoogle() {
           />
         </svg>
       )}
-      
+
       {isLoading ? "Signing in..." : "Sign in with Google"}
     </button>
   );
