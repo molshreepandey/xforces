@@ -8,12 +8,13 @@ import { redirect } from "next/navigation";
 export const GetBoilerplate = async (problem: GetBoilerplateSchema)=>{
   console.log("getting boilerpalte: ", problem);
   const questioncontent = await prisma.problemCode.findFirst({
-    where:{id: problem.problemid , language: problem.language},
+    where:{problemId : problem.problemid , language: problem.language},
     select:{
       classcode: true
     }
   });
-  return questioncontent?.classcode ?? "";
+  console.log("questioncontent: ", questioncontent);
+  return questioncontent?.classcode ?? "//Write your code here";
 }
 
 export const PollSubmissionStatus = async (taskId: string)=>{
