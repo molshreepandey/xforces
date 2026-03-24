@@ -23,6 +23,7 @@ export default function Editorpage({
   );
 
   const handleLangChange = (event: React.ChangeEvent<HTMLSelectElement>) => {
+    // console.log("Lang change: ", event.target.value as EditorLang);
     setLang(event.target.value as EditorLang);
   };
   const pollForResult = async (taskId: string) => {
@@ -64,7 +65,8 @@ export default function Editorpage({
         problemid: codeEditorParam.content.problemid,
         language: lang,
       });
-      console.log(boilerplate);
+      // console.log(lang);
+      // console.log(boilerplate);
       setBoilerplate(boilerplate);
       if (editorRef.current) {
         editorRef.current.setValue(boilerplate);
@@ -87,7 +89,7 @@ export default function Editorpage({
             </option>
           ))}
         </select>
-        {/*<span className="text-xs text-text-muted">{lang}</span>*/}
+        <span className="text-xs text-text-muted">{lang}</span>
       </div>
 
       <div className="h-3/4 min-h-0">
