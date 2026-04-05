@@ -13,7 +13,7 @@ services:
       # - /app/apps/xforces/node_modules
       # - /app/apps/xforces/.next
       # - /app/node_modules
-      - ./packages/db/:/app/packages/db/
+      - ./packages:/app/packages
       # - /app/packages/db/node_modules 
     ports:
       - "3000:3000" 

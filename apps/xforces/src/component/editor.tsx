@@ -5,11 +5,11 @@ import {
   SubmitCode,
 } from "@/actions/editor";
 // import { PollSubmissionStatus } from "@/actions/pollStatus";
-import { CodeEditorSchema, EditorLang } from "@/types/editor";
+import { CodeEditorSchema, EditorLang } from "@repo/types";
 import dynamic from "next/dynamic";
 import { useEffect, useRef, useState } from "react";
 
-const MonacoEditor = dynamic(() => import("@/lib/editor/editor"), {
+const MonacoEditor = dynamic(() => import("@repo/ui/editor/editor"), {
   ssr: false,
 });
 

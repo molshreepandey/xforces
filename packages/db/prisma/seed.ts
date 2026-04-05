@@ -30,12 +30,7 @@ async function main() {
       }
   };`;
 
-  const mainCode = `// #include <iostream>
-  // #include <vector>
-  // #include <string>
-  // #include <algorithm>
-  // #include <unistd.h> // For write() and fsync()
-  #include <competition.h> // Include your custom headers if needed
+  const mainCode = `#include <competition.h> // Include your custom headers if needed
 
   using namespace std;
 
