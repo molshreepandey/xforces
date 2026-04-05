@@ -25,6 +25,8 @@ export default function Editorpage({
   const [boilerplate, setBoilerplate] = useState<string>(
     "//write you code here",
   );
+  const [testcasepassed, setTestcasepassed] = useState<number | null>(null);
+  const [totaltestcases, setTotaltestcases] = useState<number>(0);
 
   const handleLangChange = (event: React.ChangeEvent<HTMLSelectElement>) => {
     // console.log("Lang change: ", event.target.value as EditorLang);
@@ -44,6 +46,7 @@ export default function Editorpage({
 
         if (status && status.status === "completed") {
           setResult(`Result: ${status.message}`);
+          setTestcasepassed(Number(status.ttpassed));
           setSubmitting(false);
           return;
         }
@@ -63,20 +66,22 @@ export default function Editorpage({
   };
 
   useEffect(() => {
+    
     const fetchBoilerplate = async () => {
-      const boilerplate = await GetBoilerplate({
+      const questiondetails = await GetBoilerplate({
         problemid: codeEditorParam.content.problemid,
         language: lang,
       });
       // console.log(lang);
       // console.log(boilerplate);
-      setBoilerplate(boilerplate);
+      setBoilerplate(questiondetails.questioncontent);
+      setTotaltestcases(questiondetails.totaltestcases);
       if (editorRef.current) {
-        editorRef.current.setValue(boilerplate);
+        editorRef.current.setValue(questiondetails.questioncontent);
       }
     };
     fetchBoilerplate();
-  }, [lang]);
+  }, [lang, codeEditorParam?.content?.problemid]);
 
   return (
     <div className="flex flex-col h-full">
@@ -92,7 +97,7 @@ export default function Editorpage({
             </option>
           ))}
         </select>
-        <span className="text-xs text-text-muted">{lang}</span>
+        {/*<span className="text-xs text-text-muted">{lang}</span>*/}
       </div>
 
       <div className="h-3/4 min-h-0">
@@ -111,6 +116,7 @@ export default function Editorpage({
           disabled={submitting}
           onClick={async () => {
             setSubmitting(true);
+            setTestcasepassed(null);
             setResult(null);
             try {
               const id = await SubmitCode({
@@ -119,9 +125,14 @@ export default function Editorpage({
                 problemid: codeEditorParam.content.problemid,
               });
               setResult(`Submitted! Judging...`);
+              if (!id.taskId) {
+                throw new Error(
+                  "Rate limit exceed. PLease try after some time",
+                );
+              }
               pollForResult(id.taskId as string);
-            } catch (e) {
-              setResult("Submission failed. Please try again.");
+            } catch (e: any) {
+              setResult("Submission failed. " + e.message);
               setSubmitting(false);
             }
           }}
@@ -129,6 +140,9 @@ export default function Editorpage({
         >
           {submitting ? "Submitting..." : "Submit"}
         </button>
+      </div>
+      <div>
+        <p>{testcasepassed !== null && `Test cases passed: ${testcasepassed}/${totaltestcases}`}</p>
       </div>
     </div>
   );

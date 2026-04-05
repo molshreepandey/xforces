@@ -2,7 +2,6 @@ import { prisma } from "@repo/db";
 import { redirect } from "next/navigation";
 import Editorpage from "@/component/editor";
 import QuestionBoard from "@/component/questionBoard";
-import { EditorLang } from "@/types/editor";
 import { auth } from "@/lib/auth";
 import Navbar from "@/component/navbar";
 

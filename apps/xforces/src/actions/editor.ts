@@ -6,12 +6,15 @@ import {
   TaskPayload,
   TestRequestResponse,
   TestCases,
-} from "@/types/editor";
+} from "@repo/types";
 import { prisma } from "@repo/db";
 import { redirect } from "next/navigation";
 
 export const GetBoilerplate = async (problem: GetBoilerplateSchema) => {
   console.log("getting boilerpalte: ", problem);
+  const totaltestcases = await prisma.testCase.count({
+    where: { problemId: problem.problemid },
+  });
   const questioncontent = await prisma.problemCode.findFirst({
     where: { problemId: problem.problemid, language: problem.language },
     select: {
@@ -19,7 +22,7 @@ export const GetBoilerplate = async (problem: GetBoilerplateSchema) => {
     },
   });
   console.log("questioncontent: ", questioncontent);
-  return questioncontent?.classcode ?? "//Write your code here";
+  return { questioncontent: questioncontent?.classcode ?? "//Write your code here", totaltestcases };
 };
 
 export const PollSubmissionStatus = async (taskId: string) => {
