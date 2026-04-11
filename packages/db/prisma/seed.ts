@@ -4,6 +4,31 @@ async function main() {
   // Clear existing problems to start fresh
   await prisma.problems.deleteMany();
 
+  // const classCode = `class Solution {
+  // private:
+  //     void backtrack(const vector<int>& candidates, int target, vector<int>& current, int index, vector<vector<int>>& results) {
+  //         if (target == 0) {
+  //             results.push_back(current);
+  //             return;
+  //         }
+  //
+  //         for (int i = index; i < (int)candidates.size(); ++i) {
+  //             if (target - candidates[i] >= 0) {
+  //                 current.push_back(candidates[i]);
+  //                 backtrack(candidates, target - candidates[i], current, i, results);
+  //                 current.pop_back();
+  //             }
+  //         }
+  //     }
+  //
+  // public:
+  //     vector<vector<int>> combinationSum(vector<int>& candidates, int target) {
+  //         vector<vector<int>> results;
+  //         vector<int> current;
+  //         backtrack(candidates, target, current, 0, results);
+  //         return results;
+  //     }
+  // };`;
   const classCode = `class Solution {
   private:
       void backtrack(const vector<int>& candidates, int target, vector<int>& current, int index, vector<vector<int>>& results) {
@@ -30,7 +55,7 @@ async function main() {
       }
   };`;
 
-  const mainCode = `#include <competition.h> // Include your custom headers if needed
+  const mainCode = `#include <competition.h> 
 
   using namespace std;
 
@@ -72,7 +97,7 @@ async function main() {
               final_output += "]";
               if (i < results.size() - 1) final_output += ",";
           }
-          final_output += "]\\n";
+          final_output += "]\n";
 
           write(fd3, final_output.c_str(), final_output.length());
       }
@@ -80,7 +105,29 @@ async function main() {
       fsync(fd3);
       return 0;
   }`;
-
+ 
+  //
+  // const rustClassCode = `    fn backtrack(candidates: &Vec<i32>, target: i32, current: &mut Vec<i32>, index: usize, results: &mut Vec<Vec<i32>>) {
+  //         if target == 0 {
+  //             results.push(current.clone());
+  //             return;
+  //         }
+  //
+  //         for i in index..candidates.len() {
+  //             if target - candidates[i] >= 0 {
+  //                 current.push(candidates[i]);
+  //                 Self::backtrack(candidates, target - candidates[i], current, i, results);
+  //                 current.pop();
+  //             }
+  //         }
+  //     }
+  //
+  //     pub fn combination_sum(candidates: Vec<i32>, target: i32) -> Vec<Vec<i32>> {
+  //         let mut results = Vec::new();
+  //         let mut current = Vec::new();
+  //         Self::backtrack(&candidates, target, &mut current, 0, &mut results);
+  //         results
+  //     }`;
   const rustClassCode = `    fn backtrack(candidates: &Vec<i32>, target: i32, current: &mut Vec<i32>, index: usize, results: &mut Vec<Vec<i32>>) {
           if target == 0 {
               results.push(current.clone());
@@ -163,6 +210,29 @@ async function main() {
           let _ = fd3.write_all(final_output.as_bytes());
       }
   }`;
+
+
+  //
+  // const javaClassCode = `    private void backtrack(List<Integer> candidates, int target, List<Integer> current, int index, List<List<Integer>> results) {
+  //         if (target == 0) {
+  //             results.add(new ArrayList<>(current));
+  //             return;
+  //         }
+  //
+  //         for (int i = index; i < candidates.size(); ++i) {
+  //             if (target - candidates.get(i) >= 0) {
+  //                 current.add(candidates.get(i));
+  //                 backtrack(candidates, target - candidates.get(i), current, i, results);
+  //                 current.remove(current.size() - 1);
+  //             }
+  //         }
+  //     }
+  //
+  //     public List<List<Integer>> combinationSum(List<Integer> candidates, int target) {
+  //         List<List<Integer>> results = new ArrayList<>();
+  //         backtrack(candidates, target, new ArrayList<>(), 0, results);
+  //         return results;
+  //     }`;
   const javaClassCode = `    private void backtrack(List<Integer> candidates, int target, List<Integer> current, int index, List<List<Integer>> results) {
           if (target == 0) {
               results.add(new ArrayList<>(current));
@@ -254,6 +324,27 @@ async function main() {
           this.backtrack(candidates, target, [], 0, results);
           return results;
       }`;
+  // const tsClassCode = `    private backtrack(candidates: number[], target: number, current: number[], index: number, results: number[][]): void {
+  //         if (target === 0) {
+  //             results.push([...current]);
+  //             return;
+  //         }
+  //
+  //         for (let i = index; i < candidates.length; ++i) {
+  //             if (target - candidates[i] >= 0) {
+  //                 current.push(candidates[i]);
+  //                 this.backtrack(candidates, target - candidates[i], current, i, results);
+  //                 current.pop();
+  //             }
+  //         }
+  //     }
+  //
+  //     public combinationSum(candidates: number[], target: number): number[][] {
+  //         const results: number[][] = [];
+  //         this.backtrack(candidates, target, [], 0, results);
+  //         return results;
+  //     }`;
+  //
 
   const tsMainCode = `import * as fs from 'fs';
 
@@ -310,6 +401,27 @@ async function main() {
           this.backtrack(candidates, target, [], 0, results);
           return results;
       }`;
+  // const jsClassCode = `    backtrack(candidates, target, current, index, results) {
+  //         if (target === 0) {
+  //             results.push([...current]);
+  //             return;
+  //         }
+  //
+  //         for (let i = index; i < candidates.length; ++i) {
+  //             if (target - candidates[i] >= 0) {
+  //                 current.push(candidates[i]);
+  //                 this.backtrack(candidates, target - candidates[i], current, i, results);
+  //                 current.pop();
+  //             }
+  //         }
+  //     }
+  //
+  //     combinationSum(candidates, target) {
+  //         const results = [];
+  //         this.backtrack(candidates, target, [], 0, results);
+  //         return results;
+  //     }`;
+
 
   const jsMainCode = `const fs = require('fs');
 
@@ -345,6 +457,23 @@ async function main() {
   }
 
   main();`;
+  // const pyClassCode = [
+  //   "    def backtrack(self, candidates, target, current, index, results):",
+  //   "        if target == 0:",
+  //   "            results.append(list(current))",
+  //   "            return",
+  //   "",
+  //   "        for i in range(index, len(candidates)):",
+  //   "            if target - candidates[i] >= 0:",
+  //   "                current.append(candidates[i])",
+  //   "                self.backtrack(candidates, target - candidates[i], current, i, results)",
+  //   "                current.pop()",
+  //   "",
+  //   "    def combinationSum(self, candidates, target):",
+  //   "        results = []",
+  //   "        self.backtrack(candidates, target, [], 0, results)",
+  //   "        return results",
+  // ].join("\n");
   const pyClassCode = [
     "    def backtrack(self, candidates, target, current, index, results):",
     "        if target == 0:",
@@ -362,7 +491,6 @@ async function main() {
     "        self.backtrack(candidates, target, [], 0, results)",
     "        return results",
   ].join("\n");
-
   const pyMainCode = [
     "import sys",
     "import os",
